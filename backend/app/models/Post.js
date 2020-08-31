@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Post = sequelize.define("post", {
+  const Post = sequelize.define("Post", {
     title: {
       type: Sequelize.STRING,
     },
@@ -10,11 +10,10 @@ module.exports = (sequelize, Sequelize) => {
 
   // Post.associate = function (models) {
   //   models.Post.belongsTo(models.User, {
-  //     onDelete: "CASCADE",
-  //     hooks: true,
-  //   });
-  //   models.Post.hasMany(models.Comment, {
-  //     onDelete: "CASCADE",
+  //     foreignKey: {
+  //       name: "UserId",
+  //       allowNull: false,
+  //     },
   //   });
   // };
 

@@ -18,14 +18,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./app/models");
 
+require("./app/routes/post")(app);
+require("./app/routes/user")(app);
+
 db.sequelize.sync();
 // // drop the table if it already exists
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.");
 // });
-
-require("./app/routes/post")(app);
-require("./app/routes/user")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;

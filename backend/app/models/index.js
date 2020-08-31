@@ -21,6 +21,13 @@ db.sequelize = sequelize;
 
 db.posts = require("./Post.js")(sequelize, Sequelize);
 db.users = require("./User.js")(sequelize, Sequelize);
-// db.users = require("./Comment.js")(sequelize, Sequelize);
+// db.comments = require("./Comment.js")(sequelize, Sequelize);
+
+db.users.hasMany(db.posts, { as: "posts" });
+db.posts.belongsTo(db.users, {
+  foreignKey: "UserId",
+  allowNull: false,
+  as: "users",
+});
 
 module.exports = db;

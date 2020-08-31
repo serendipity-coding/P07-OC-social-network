@@ -2,7 +2,7 @@ const db = require("../models");
 const Post = db.posts;
 const User = require("../models/User");
 const { check, validationResult } = require("express-validator");
-const Op = db.Sequelize.Op;
+// const Op = db.Sequelize.Op;
 
 // @route  POST api/posts/new
 // @desc   Creat post
@@ -17,13 +17,18 @@ exports.createPost = (req, res) => {
   try {
     // Create a post
     const post = {
-      title: req.body.title,
-      text: req.body.text,
+      // title: req.body.title,
+      // text: req.body.text,
+      // UserId: req.body.UserId,
     };
     // Save post in the database
-    Post.create(post)
-      .then((data) => {
-        res.send(data);
+    Post.create({
+      title: req.body.title,
+      text: req.body.text,
+      UserId: req.body.UserId,
+    })
+      .then((post) => {
+        res.send(post);
       })
       .catch((err) => {
         res.status(500).send({
@@ -36,16 +41,15 @@ exports.createPost = (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-// @route  POST api/posts
-// @desc   Creat post
+// @route  GET api/posts
+// @desc   Get all post
 // @acess  Private
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
-
-  Post.findAll({ where: condition })
-    .then((data) => {
-      res.send(data);
+  Post.findAll({
+    include: ["users"],
+  })
+    .then((posts) => {
+      res.send(posts);
     })
     .catch((err) => {
       res.status(500).send({
