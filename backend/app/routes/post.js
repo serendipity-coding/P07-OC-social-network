@@ -14,10 +14,18 @@ module.exports = (app) => {
   );
 
   // // Retrieve all posts
-  router.get("/", auth, postCtrl.findAll);
+  router.get(
+    "/",
+    // auth,
+    postCtrl.findAll
+  );
 
   // // Retrieve a single post with id
-  router.get("/:id", auth, postCtrl.findOne);
+  router.get(
+    "/:id",
+    //  auth,
+    postCtrl.findOne
+  );
 
   // // Update a post with id
   router.put("/:id", auth, postCtrl.update);

@@ -27,5 +27,5 @@ module.exports = (app) => {
     userCtrl.login
   );
 
-  app.use("/api/users", router);
+  app.use("/api/auth", router);
 };

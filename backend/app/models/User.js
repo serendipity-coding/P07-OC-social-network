@@ -15,6 +15,10 @@ module.exports = (sequelize, Sequelize) => {
   //     onDelete: "CASCADE",
   //     hooks: true,
   //   });
+  //   models.User.hasMany(models.Comment, {
+  //     onDelete: "CASCADE",
+  //     hooks: true,
+  //   });
   // };
 
   return User;

@@ -31,7 +31,7 @@ exports.signup = async (req, res) => {
     const avatar = gravatar.url(email, {
       s: "200", //size
       r: "pg",
-      d: "mp",
+      d: "monsterid",
     });
     //Encrypt password
     const salt = await bcrypt.genSalt(10);
@@ -48,10 +48,11 @@ exports.signup = async (req, res) => {
     // Save new user in the database
     User.create(newUser)
       .then((data) => {
+        console.log("data in register", data.id);
         // res.send(data);
         res.status(201).json({
           data,
-          token: jwt.sign({ userId: data._id }, "secrettoken", {
+          token: jwt.sign({ userId: data.id }, "secrettoken", {
             expiresIn: "24h",
           }),
         });
@@ -98,10 +99,11 @@ exports.login = async (req, res) => {
         id: user.id,
       },
     };
+    let data = user;
 
     jwt.sign(payload, "secrettoken", { expiresIn: "24h" }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      res.json({ data, token });
     });
   } catch (err) {
     console.error(err.message);

@@ -2,7 +2,7 @@ const db = require("../models");
 const Post = db.posts;
 const User = require("../models/User");
 const { check, validationResult } = require("express-validator");
-// const Op = db.Sequelize.Op;
+const jwt = require("jsonwebtoken");
 
 // @route  POST api/posts/new
 // @desc   Creat post
@@ -15,20 +15,19 @@ exports.createPost = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    // Create a post
-    const post = {
-      // title: req.body.title,
-      // text: req.body.text,
-      // UserId: req.body.UserId,
-    };
-    // Save post in the database
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "secrettoken");
+    const userId = decodedToken.userId;
+    console.log("decodedToken", decodedToken);
+
+    // Create  and save a post
     Post.create({
       title: req.body.title,
       text: req.body.text,
-      UserId: req.body.UserId,
+      UserId: userId,
     })
-      .then((post) => {
-        res.send(post);
+      .then((data) => {
+        res.send(data);
       })
       .catch((err) => {
         res.status(500).send({
@@ -47,6 +46,7 @@ exports.createPost = (req, res) => {
 exports.findAll = (req, res) => {
   Post.findAll({
     include: ["users"],
+    order: [["createdAt", "DESC"]],
   })
     .then((posts) => {
       res.send(posts);

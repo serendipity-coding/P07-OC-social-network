@@ -20,6 +20,7 @@ const db = require("./app/models");
 
 require("./app/routes/post")(app);
 require("./app/routes/user")(app);
+require("./app/routes/comment")(app);
 
 db.sequelize.sync();
 // // drop the table if it already exists
