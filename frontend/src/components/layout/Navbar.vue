@@ -2,20 +2,20 @@
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <a href @click.prevent="logout" class="navbar-brand">Groupomania</a>
     <div class="navbar-nav mr-auto">
-      <li class="nav-item">
+      <li class="nav-item" v-if="username || isAdmin">
         <router-link to="/home" class="nav-link">
           <i class="fas fa-home fa-2x"></i>
         </router-link>
       </li>
       <li class="nav-item" v-if="isAdmin">
-        <router-link to="/admin" class="nav-link"
-          ><i class="fas fa-user-shield fa-2x"></i
-        ></router-link>
+        <router-link to="/admin" class="nav-link">
+          <i class="fas fa-user-shield fa-2x"></i>
+        </router-link>
       </li>
 
       <!-- <li class="nav-item">
         <router-link to="/user" class="nav-link">User</router-link>
-      </li> -->
+      </li>-->
     </div>
 
     <!-- <div class="navbar-nav ml-auto">
@@ -29,7 +29,7 @@
           <i class="fas fa-sign-in-alt fa-lg"></i> Login
         </router-link>
       </li>
-    </div> -->
+    </div>-->
 
     <div class="navbar-nav ml-auto">
       <li class="nav-item" v-if="avatar">
@@ -39,7 +39,7 @@
         </router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link nav-link-logout " href @click.prevent="logout">
+        <a class="nav-link nav-link-logout" href @click.prevent="logout">
           <i class="fas fa-sign-out-alt fa-lg"></i> LogOut
         </a>
       </li>
@@ -54,7 +54,7 @@ export default {
     return {
       username: JSON.parse(localStorage.getItem("user")).data.name,
       avatar: JSON.parse(localStorage.getItem("user")).data.avatar,
-      isAdmin: JSON.parse(localStorage.getItem("user")).data.isAdmin
+      isAdmin: JSON.parse(localStorage.getItem("user")).data.isAdmin,
     };
   },
   methods: {
@@ -62,24 +62,10 @@ export default {
       localStorage.removeItem("user");
       this.user = "";
       this.$router.push("/");
-      location.reload(true);
+      window.location.reload();
       console.log("user logged out");
-    }
+    },
   },
-  watch: {
-    //here to watch user update
-  }
-
-  // beforeCreate(){
-
-  //     let user = JSON.parse(localStorage.getItem("user"));
-  //     if (user == null) {
-  //       return (this.username = "");
-  //     } else {
-  //       return (this.username = user.data.name);
-  //     }
-
-  // }
 };
 </script>
 <style>

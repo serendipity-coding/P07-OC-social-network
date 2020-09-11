@@ -4,9 +4,7 @@
       <div class="card">
         <img src="../icon-above-font.png" class="card-img-top" alt="..." />
         <div class="card-body">
-          <h3 class="card-text">
-            Avec Groupomania, partagez et restez en contact avec vos collègues.
-          </h3>
+          <h3 class="card-text">Avec Groupomania, partagez et restez en contact avec vos collègues.</h3>
         </div>
       </div>
     </div>
@@ -20,22 +18,12 @@
       <form @submit.prevent="login" name="form">
         <div class="form-group">
           <label for="email">Email</label>
-          <input
-            v-model="user.email"
-            type="text"
-            class="form-control"
-            name="email"
-          />
+          <input v-model="user.email" type="text" class="form-control" name="email" />
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input
-            v-model="user.password"
-            type="password"
-            class="form-control"
-            name="password"
-          />
+          <input v-model="user.password" type="password" class="form-control" name="password" />
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block">
@@ -47,9 +35,7 @@
           <button type="button" class="btn btn-success">Sign up</button>
         </router-link>
         <div class="form-group">
-          <div v-if="message" class="alert alert-danger">
-            {{ message }}
-          </div>
+          <div v-if="message" class="alert alert-danger">{{ message }}</div>
         </div>
       </form>
     </div>
@@ -67,9 +53,9 @@ export default {
       user: {
         username: "",
         email: "",
-        password: ""
+        password: "",
       },
-      message: ""
+      message: "",
     };
   },
 
@@ -82,23 +68,24 @@ export default {
         axios
           .post("http://localhost:5000/api/auth/login", {
             email: this.user.email,
-            password: this.user.password
+            password: this.user.password,
           })
-          .then(response => {
+          .then((response) => {
             if (response.data.token) {
               console.log("login data", response.data);
               localStorage.setItem("user", JSON.stringify(response.data));
             }
             this.$router.push("/home");
+            window.location.reload();
             return response.data;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err.response.data.errors[0].msg);
             this.message = "incorrect credentiels";
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

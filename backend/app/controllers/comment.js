@@ -16,15 +16,16 @@ exports.createComment = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, "secrettoken");
-    const userId = decodedToken.user.id;
-    console.log("token", userId);
+    // const token = req.headers.authorization.split(" ")[1];
+    // const decodedToken = jwt.verify(token, "secrettoken");
+    // const userId = decodedToken.user.id;
+    // console.log("token", userId);
 
     // Create  and save a post
     Comment.create({
       content: req.body.content,
-      UserId: userId,
+      // UserId: userId,
+      UserId: req.body.UserId,
       PostId: req.params.id,
     })
       .then((comment) => {
@@ -111,6 +112,30 @@ exports.deleteComment = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Could not delete Comment with id=" + id,
+      });
+    });
+};
+
+// @route  GET api/comments/post_id
+// @desc   Get last comment of a post
+// @acess  Private
+exports.findLastComment = (req, res) => {
+  const id = req.params.post_id;
+  Comment.findAll({
+    limit: 1,
+    where: {
+      PostId: id
+    },
+    include: ["users", "posts"],
+    order: [["createdAt", "DESC"]],
+  })
+    .then((comment) => {
+      res.send(comment);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving comment.",
       });
     });
 };

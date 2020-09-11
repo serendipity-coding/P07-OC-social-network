@@ -10,30 +10,15 @@
         <div>
           <div class="form-group">
             <label for="name">name</label>
-            <input
-              v-model="user.name"
-              type="text"
-              class="form-control"
-              name="name"
-            />
+            <input v-model="user.name" type="text" class="form-control" name="name" />
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input
-              v-model="user.email"
-              type="email"
-              class="form-control"
-              name="email"
-            />
+            <input v-model="user.email" type="email" class="form-control" name="email" />
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input
-              v-model="user.password"
-              type="password"
-              class="form-control"
-              name="password"
-            />
+            <input v-model="user.password" type="password" class="form-control" name="password" />
           </div>
           <div class="form-group">
             <button class="btn btn-primary btn-block">Sign Up</button>
@@ -46,9 +31,7 @@
       </router-link>
 
       <div class="form-group">
-        <div v-if="message" class="alert alert-danger">
-          {{ message }}
-        </div>
+        <div v-if="message" class="alert alert-danger">{{ message }}</div>
       </div>
     </div>
   </div>
@@ -62,9 +45,9 @@ export default {
       user: {
         name: "",
         email: "",
-        password: ""
+        password: "",
       },
-      message: ""
+      message: "",
     };
   },
   methods: {
@@ -81,20 +64,21 @@ export default {
           .post("http://localhost:5000/api/auth/signup", {
             name: this.user.name,
             email: this.user.email,
-            password: this.user.password
+            password: this.user.password,
           })
-          .then(response => {
+          .then((response) => {
             if (response.data.token) {
               localStorage.setItem("user", JSON.stringify(response.data));
             }
             console.log("sign up response", response.data);
             this.$router.push("/profile");
+            window.location.reload();
             return response.data;
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

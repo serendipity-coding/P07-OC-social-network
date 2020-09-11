@@ -9,29 +9,29 @@
       <input
         type="textarea"
         class="text"
-        v-model="newPost.title"
+        v-model="editedPost.title"
         id="input-title"
         rows="10"
         cols="30"
         placeholder="Add a title..."
       />
-      <textarea class="form-control" v-model="newPost.text" placeholder="add content" rows="3"></textarea>
+      <textarea class="form-control" v-model="editedPost.text" placeholder="add content" rows="3"></textarea>
       <i class="fas fa-image fa-lg"></i>
       <div v-if="message" class="alert alert-danger">{{ message }}</div>
     </div>
-    <button type="button" class="btn btn-info post-btn" @click="creatPost">Post</button>
+    <button type="button" class="btn btn-info post-btn" @click="editPost">Edit</button>
   </div>
 </template>
 <script>
 import axios from "axios";
 export default {
-  name: "NewPost",
+  name: "UpdatePost",
   data() {
     return {
       username: JSON.parse(localStorage.getItem("user")).data.name,
       avatar: JSON.parse(localStorage.getItem("user")).data.avatar,
       currentUserId: JSON.parse(localStorage.getItem("user")).data.id,
-      newPost: {
+      editedPost: {
         title: "",
         text: "",
       },
@@ -39,21 +39,21 @@ export default {
     };
   },
   methods: {
-    creatPost(newPost) {
+    editPost(post) {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-      if (newPost.title == null) {
+      if (post.title == null) {
         this.message = "Please add a title";
       }
-      if (newPost.text == null) {
+      if (post.text == null) {
         this.message = "Please add a text";
       }
       axios
-        .post(
-          "http://localhost:5000/api/posts/new",
+        .put(
+          `http://localhost:5000/api/posts/${this.$route.params.post_id}`,
           {
-            title: this.newPost.title,
-            text: this.newPost.text,
+            title: this.editedPost.title,
+            text: this.editedPost.text,
             UserId: this.currentUserId,
           }
           // ,
@@ -65,15 +65,13 @@ export default {
           // }
         )
         .then((data) => {
-          console.log("creat message", data);
+          console.log("apdate post", data);
           this.message === "";
           this.$router.push("/home");
         })
         .catch(() => {
           console.log("le message n'a pas été envoyé");
         });
-
-      console.log("post btn");
     },
   },
 };

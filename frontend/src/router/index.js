@@ -7,6 +7,7 @@ import Profile from "../components/home/Profile.vue";
 import NewPost from "../components/home/NewPost.vue";
 import AdminDashboard from "../components/home/AdminDashboard.vue";
 import ViewPost from "../components/home/ViewPost.vue";
+import UpdatePost from "../components/home/UpdatePost.vue"
 
 Vue.use(Router);
 
@@ -47,6 +48,12 @@ export default new Router({
       path: "/post/:post_id",
       name: "ViewPost",
       component: ViewPost
+    }
+    ,
+    {
+      path: "/updatepost/:post_id",
+      name: "UpdatePost",
+      component: UpdatePost
     }
   ]
 });

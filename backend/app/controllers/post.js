@@ -15,16 +15,17 @@ exports.createPost = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, "secrettoken");
-    const userId = decodedToken.userId;
-    console.log("decodedToken", decodedToken);
+    // const token = req.headers.authorization.split(" ")[1];
+    // const decodedToken = jwt.verify(token, "secrettoken");
+    // const userId = decodedToken.userId;
+    // console.log("decodedToken", decodedToken);
 
     // Create  and save a post
     Post.create({
       title: req.body.title,
       text: req.body.text,
-      UserId: userId,
+      UserId: req.body.UserId,
+      // UserId: userId,
     })
       .then((data) => {
         res.send(data);
@@ -64,7 +65,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Post.findByPk(id)
+  Post.findByPk(id, { include: ["users"] })
     .then((data) => {
       res.send(data);
     })

@@ -7,25 +7,29 @@
           <p class="date">{{ moment(post.createdAt).fromNow() }}</p>
         </div>
         <div class="card-header-user">
-          {{ user.name }}
-          <img class="avatar" v-bind:src="user.avatar" />
+          {{ post.users.name }}
+          <img class="avatar" v-bind:src="post.users.avatar" />
         </div>
       </h5>
 
       <div class="card-body">
         <p class="card-text">{{ post.text }}</p>
-        <div class="comment">
+        <div class="add-comment">
           <div class="input-group mb-3">
             <input
               type="text"
+              v-model="commentContent"
               class="form-control"
               placeholder="Add a comment ..."
               aria-describedby="button-addon2"
             />
             <div class="input-group-append">
-              <button class="btn btn-primary" type="button" id="button-addon2">
-                Comment
-              </button>
+              <button
+                class="btn btn-primary"
+                type="button"
+                id="button-addon2"
+                @click="addComment"
+              >Comment</button>
             </div>
           </div>
         </div>
@@ -36,14 +40,9 @@
             href
             @click.prevent="deletePost(post.id)"
           >
-            <i class="fas fa-trash-alt fa-2x "></i>
+            <i class="fas fa-trash-alt fa-2x"></i>
           </a>
-          <a
-            class="nav-link "
-            v-if="currentUserId == post.UserId"
-            href
-            @click.prevent="editPost"
-          >
+          <a class="nav-link" v-if="currentUserId == post.UserId" href @click.prevent="editPost">
             <i class="far fa-edit fa-2x"></i>
           </a>
         </div>
@@ -55,21 +54,29 @@
         <h3 v-if="$route.params.post_id == comment.PostId">
           {{ comment.content }}
         </h3>
-      </div> -->
+      </div>-->
       <div class="comment" v-if="$route.params.post_id == comment.PostId">
         <div class="comment-header">
           <div class="comment-header_user">
             <img class="avatar" v-bind:src="comment.users.avatar" />
-            <h5>{{ comment.users.name }}</h5>
+            <h5 class="comment-username">{{ comment.users.name }}</h5>
           </div>
           <div class="comment-header_date">
             <p class="date">{{ moment(comment.createdAt).fromNow() }}</p>
           </div>
         </div>
         <div class="comment-body">
-          <div class="comment-text">
-            {{ comment.content }}
-          </div>
+          <div class="comment-text">{{ comment.content }}</div>
+        </div>
+        <div class="commentCtrl">
+          <a
+            class="nav-link trash"
+            v-if="currentUserId == comment.UserId || user.isAdmin"
+            href
+            @click.prevent="deleteComment(comment.id)"
+          >
+            <i class="fas fa-trash-alt fa-2x"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -87,16 +94,67 @@ export default {
       currentUserId: JSON.parse(localStorage.getItem("user")).data.id,
       message: "",
       post: [],
-      comments: []
+      comments: [],
+      commentContent: "",
     };
   },
-  methods: {},
+  methods: {
+    addComment() {
+      let userData = JSON.parse(localStorage.getItem("user"));
+      let token = userData.token;
+      axios
+        .post(
+          `http://localhost:5000/api/comments/${this.post.id}/new`,
+          {
+            content: this.commentContent,
+            UserId: this.currentUserId,
+          }
+          // ,
+          // {
+          //   headers: {
+          //     Authorization: `Bearer${token}`,
+          //   },
+          // }
+        )
+        .then((response) => {
+          console.log("add comment", response.data);
+          // return (this.post = response.data);
+        })
+        .catch((err) => {
+          console.log(err.response.data.errors[0].msg);
+          this.message = "incorrect credentiels";
+        });
+      window.location.reload();
+    },
+    //delete a comment
+    deleteComment(commentId) {
+      let userData = JSON.parse(localStorage.getItem("user"));
+      let token = userData.token;
+      axios
+        .delete(
+          `http://localhost:5000/api/comments/${commentId}`
+          // , {
+          //   headers: {
+          //     "Content-type": "application/json",
+          //     Authorization: `Bearer ${token}`,
+          //   },
+          // }
+        )
+        .then(() => {
+          console.log("message supprimé");
+        })
+        .catch(() => {
+          console.log("le message n'a pas été supprimé !");
+        });
+      window.location.reload();
+    },
+  },
 
   beforeCreate() {
     //get all posts
     let userData = JSON.parse(localStorage.getItem("user"));
     let user = userData.data;
-    console.log(userData);
+    // console.log("userdata", userData);
     axios
       .get(
         `http://localhost:5000/api/posts/${this.$route.params.post_id}`
@@ -107,11 +165,11 @@ export default {
         //     }
         //   }
       )
-      .then(response => {
-        // console.log(response.data);
+      .then((response) => {
+        console.log("post by id", response.data);
         return (this.post = response.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err.response.data.errors[0].msg);
         this.message = "incorrect credentiels";
       });
@@ -127,17 +185,21 @@ export default {
         //     }
         //   }
       )
-      .then(response => {
-        console.log("all comments", response.data);
+      .then((response) => {
+        console.log("all comment", response.data);
         return (this.comments = response.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err.response.data.errors[0].msg);
       });
-  }
+  },
 };
 </script>
 <style scoped>
+.commentCtrl {
+  display: flex;
+  flex-direction: row-reverse;
+}
 .comment-header_user {
   display: flex;
   flex-direction: row;
@@ -146,7 +208,7 @@ export default {
   width: 600px;
   margin: 30px auto;
   padding: 5px;
-  background-color: rgba(0, 175, 240, 0.75);
+  background-color: #b3e5fc;
   border: 2px solid rgba(0, 175, 240, 0.75);
   border-radius: 12px;
 }
@@ -167,6 +229,10 @@ export default {
 
 .card-header-user {
   margin-top: 4px;
+}
+.comment-username {
+  padding-left: 8px;
+  padding-top: 10px;
 }
 
 .card-header-title {

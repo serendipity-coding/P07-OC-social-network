@@ -8,7 +8,7 @@ module.exports = (app) => {
   // Create a new Post
   router.post(
     "/new",
-    auth,
+    // auth,
     [check("text", "Text is required").not().isEmpty()],
     postCtrl.createPost
   );
@@ -28,7 +28,9 @@ module.exports = (app) => {
   );
 
   // // Update a post with id
-  router.put("/:id", auth, postCtrl.update);
+  router.put("/:id",
+    // auth, 
+    postCtrl.update);
 
   // // Delete a post with id
   router.delete("/:id", auth, postCtrl.delete);

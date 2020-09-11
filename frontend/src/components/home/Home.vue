@@ -3,15 +3,18 @@
     <div class="heading">
       <h2>Latest posts</h2>
       <!--add new post-->
-      <div class=" new-post">
-        <router-link to="/newpost"
-          ><img src="../notepad.png" class="add-post-logo" alt="" />
-          <p>Add post</p></router-link
-        >
+      <div class="new-post">
+        <router-link to="/newpost">
+          <img src="../notepad.png" class="add-post-logo" alt />
+          <p>Add post</p>
+        </router-link>
       </div>
     </div>
+    <!--search in posts-->
+    <input type="text" v-model="searchTerm" placeholder="Search Posts" class="search-input" />
+
     <!--all posts-->
-    <div v-for="post in posts" :key="post.id">
+    <div v-for="post in filteredPosts" :key="post.id">
       <div class="card">
         <h5 class="card-header">
           <div class="card-header-title">
@@ -26,13 +29,15 @@
 
         <div class="card-body">
           <p class="card-text">{{ post.text }}</p>
+          <div v-if=" commentCount(post.id).length > 0">
+            <p>{{ getLastComment(post.id) }}</p>
+          </div>
           <div class="post-react">
-            <router-link
-              :to="{ name: 'ViewPost', params: { post_id: post.id } }"
-            >
-              <span class="comment-nbr"
-                ><i class="fas fa-comment fa-lg"></i> 3</span
-              >
+            <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }">
+              <span class="comment-nbr">
+                {{ commentCount(post.id).length }}
+                <i class="fas fa-comment fa-lg"></i>
+              </span>
             </router-link>
           </div>
           <div class="comment">
@@ -40,6 +45,7 @@
               <input
                 type="text"
                 class="form-control"
+                v-model="commentContent"
                 placeholder="Add a comment ..."
                 aria-describedby="button-addon2"
               />
@@ -48,9 +54,8 @@
                   class="btn btn-primary"
                   type="button"
                   id="button-addon2"
-                >
-                  Comment
-                </button>
+                  @click="addComment(post.id)"
+                >Comment {{post.id}}</button>
               </div>
             </div>
           </div>
@@ -61,16 +66,11 @@
               href
               @click.prevent="deletePost(post.id)"
             >
-              <i class="fas fa-trash-alt fa-2x "></i>
+              <i class="fas fa-trash-alt fa-2x"></i>
             </a>
-            <a
-              class="nav-link "
-              v-if="currentUserId == post.UserId"
-              href
-              @click.prevent="editPost"
-            >
-              <i class="far fa-edit fa-2x"></i>
-            </a>
+            <router-link :to="{ name: 'UpdatePost', params: { post_id: post.id } }">
+              <i class="far fa-edit fa-2x" v-if="currentUserId == post.UserId"></i>
+            </router-link>
           </div>
         </div>
       </div>
@@ -90,9 +90,13 @@ export default {
     return {
       moment: moment,
       user: JSON.parse(localStorage.getItem("user")).data,
+      userToken: JSON.parse(localStorage.getItem("user")),
       currentUserId: JSON.parse(localStorage.getItem("user")).data.id,
       message: "",
-      posts: []
+      commentContent: "",
+      posts: [],
+      comments: [],
+      searchTerm: "",
     };
   },
   methods: {
@@ -103,8 +107,8 @@ export default {
         .delete(`http://localhost:5000/api/posts/${postId}`, {
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then(() => {
           console.log("message supprimé");
@@ -112,11 +116,69 @@ export default {
         .catch(() => {
           console.log("le message n'a pas été supprimé !");
         });
-      console.log("post deleted");
     },
     editPost() {
       console.log("post updated");
-    }
+    },
+    addComment(id) {
+      let userData = JSON.parse(localStorage.getItem("user"));
+      let token = userData.token;
+      axios
+        .post(
+          `http://localhost:5000/api/comments/${id}/new`,
+          {
+            content: this.commentContent,
+            UserId: this.currentUserId,
+          }
+          // ,
+          // {
+          //   headers: {
+          //     Authorization: `Bearer${token}`,
+          //   },
+          // }
+        )
+        .then((response) => {
+          console.log("add comment", response.data);
+        })
+        .catch((err) => {
+          console.log(err.response.data.errors[0].msg);
+          this.message = "incorrect credentiels";
+        });
+      window.location.reload();
+    },
+    commentCount(id) {
+      const count = this.comments.filter((comment) => comment.PostId == id);
+      return count;
+    },
+    getLastComment(postId) {
+      axios
+        .get(
+          `http://localhost:5000/api/comments/${postId}`
+          //   ,
+          //   {
+          //     headers: {
+          //       Authorization: `Bearer${userData.token}`
+          //     }
+          //   }
+        )
+        .then((response) => {
+          let lastComment = "";
+          console.log("last comment", response.data[0].content);
+          lastComment = response.data[0].content;
+          return lastComment;
+        })
+        .catch((err) => {
+          console.log(err.response.data.errors[0].msg);
+        });
+    },
+  },
+  //filter post
+  computed: {
+    filteredPosts() {
+      return this.posts.filter((post) => {
+        return post.title.match(this.searchTerm);
+      });
+    },
   },
 
   beforeCreate() {
@@ -133,16 +195,42 @@ export default {
         //   }
         // }
       )
-      .then(response => {
-        console.log(response.data);
+      .then((response) => {
         return (this.posts = response.data);
       })
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+    //get all comment
+    axios
+      .get(
+        `http://localhost:5000/api/comments/`
+        //   ,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer${userData.token}`
+        //     }
+        //   }
+      )
+      .then((response) => {
+        console.log(response.data);
+        return (this.comments = response.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data.errors[0].msg);
+      });
+  },
 };
 </script>
 
 <style>
+.search-input {
+  display: block;
+  width: 80%;
+  padding: 5px;
+  margin: auto;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
 .post-react i {
   margin-left: 15px;
   margin-bottom: 10px;
@@ -198,7 +286,7 @@ export default {
 }
 .card {
   margin: 20px auto;
-  background-color: #e0e0e0;
+  background-color: #eeeeee;
   border-radius: 30px;
 }
 
