@@ -55,7 +55,7 @@
                   type="button"
                   id="button-addon2"
                   @click="addComment(post.id)"
-                >Comment {{post.id}}</button>
+                >Comment</button>
               </div>
             </div>
           </div>

@@ -33,7 +33,9 @@ module.exports = (app) => {
     postCtrl.update);
 
   // // Delete a post with id
-  router.delete("/:id", auth, postCtrl.delete);
+  router.delete("/:id",
+    // auth, 
+    postCtrl.delete);
 
   // // Delete all posts
   // router.delete("/", auth, postCtrl.deleteAll);

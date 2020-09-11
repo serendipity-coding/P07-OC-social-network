@@ -100,6 +100,7 @@ export default {
   grid-gap: 30px;
 }
 .leading .card {
+  background-color: white;
   border: none;
   box-shadow: none;
 }

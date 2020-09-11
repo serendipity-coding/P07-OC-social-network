@@ -26,6 +26,11 @@ module.exports = (app) => {
     ],
     userCtrl.login
   );
+  //get all users for admin
+  router.get("/users", userCtrl.getAllUsers)
+
+  //Delete one user for admin
+  router.delete("/users/:id", userCtrl.deleteUser);
 
   app.use("/api/auth", router);
 };

@@ -110,3 +110,47 @@ exports.login = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+// @route  GET api/auth/users
+// @desc   Get user by token
+// @acess  private
+exports.getAllUsers = (req, res, next) => {
+  User.findAll({
+    order: [["createdAt", "DESC"]],
+  })
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error retreiving users",
+      });
+    });
+}
+
+// @route  GET api/auth/users/:user_id
+// @desc   Get user by token
+// @acess  private
+exports.deleteUser = (req, res) => {
+  const id = req.params.id;
+
+  User.destroy({
+    where: { id: id },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          message: "User was deleted successfully!",
+        });
+      } else {
+        res.send({
+          message: `Cannot delete User with id=${id}. Maybe User was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Could not delete User with id=" + id,
+      });
+    });
+};
