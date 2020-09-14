@@ -12,33 +12,15 @@
           <i class="fas fa-user-shield fa-2x"></i>
         </router-link>
       </li>
-
-      <!-- <li class="nav-item">
-        <router-link to="/user" class="nav-link">User</router-link>
-      </li>-->
     </div>
-
-    <!-- <div class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <router-link to="/register" class="nav-link">
-          <i class="fas fa-user-plus fa-lg"></i> Sign Up
-        </router-link>
-      </li>
-      <li class="nav-item">
-        <router-link to="/" class="nav-link">
-          <i class="fas fa-sign-in-alt fa-lg"></i> Login
-        </router-link>
-      </li>
-    </div>-->
-
     <div class="navbar-nav ml-auto">
-      <li class="nav-item" v-if="avatar">
+      <li v-if="username" class="nav-item">
         <router-link to="/profile" class="nav-link">
           {{ username }}
           <img class="avatar" v-bind:src="avatar" />
         </router-link>
       </li>
-      <li class="nav-item">
+      <li v-if="username" class="nav-item">
         <a class="nav-link nav-link-logout" href @click.prevent="logout">
           <i class="fas fa-sign-out-alt fa-lg"></i> LogOut
         </a>
@@ -57,13 +39,13 @@ export default {
       isAdmin: JSON.parse(localStorage.getItem("user")).data.isAdmin,
     };
   },
+
   methods: {
     logout() {
       localStorage.removeItem("user");
       this.user = "";
       this.$router.push("/");
       window.location.reload();
-      console.log("user logged out");
     },
   },
 };

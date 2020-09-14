@@ -48,7 +48,6 @@ exports.signup = async (req, res) => {
     // Save new user in the database
     User.create(newUser)
       .then((data) => {
-        console.log("data in register", data.id);
         // res.send(data);
         res.status(201).json({
           data,

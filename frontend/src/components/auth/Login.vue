@@ -15,15 +15,37 @@
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
       />
-      <form @submit.prevent="login" name="form">
+      <form @submit.prevent="handleSubmit" name="form">
         <div class="form-group">
           <label for="email">Email</label>
-          <input v-model="user.email" type="text" class="form-control" name="email" />
+          <input
+            type="text"
+            v-model="user.email"
+            id="email"
+            name="email"
+            class="form-control"
+            :class="{ 'is-invalid': submitted && $v.user.email.$error }"
+          />
+          <div v-if="submitted && $v.user.email.$error" class="invalid-feedback">
+            <span v-if="!$v.user.email.required">Email is required</span>
+            <span v-if="!$v.user.email.email">Email is invalid</span>
+          </div>
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input v-model="user.password" type="password" class="form-control" name="password" />
+          <input
+            type="password"
+            v-model="user.password"
+            id="password"
+            name="password"
+            class="form-control"
+            :class="{ 'is-invalid': submitted && $v.user.password.$error }"
+          />
+          <div v-if="submitted && $v.user.password.$error" class="invalid-feedback">
+            <span v-if="!$v.user.password.required">Password is required</span>
+            <span v-if="!$v.user.password.minLength">Password must be at least 6 characters</span>
+          </div>
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block">
@@ -45,7 +67,7 @@
 
 <script>
 import axios from "axios";
-
+import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 export default {
   name: "Login",
   data() {
@@ -56,34 +78,65 @@ export default {
         password: "",
       },
       message: "",
+      submitted: false,
     };
+  },
+  validations: {
+    user: {
+      email: { required, email },
+      password: { required, minLength: minLength(6) },
+    },
   },
 
   methods: {
     login() {
-      let token = "";
-      if (this.user.email == "" || this.user.password == "") {
-        this.message = "Please enter username and password";
-      } else {
-        axios
-          .post("http://localhost:5000/api/auth/login", {
-            email: this.user.email,
-            password: this.user.password,
-          })
-          .then((response) => {
-            if (response.data.token) {
-              console.log("login data", response.data);
-              localStorage.setItem("user", JSON.stringify(response.data));
-            }
-            this.$router.push("/home");
-            window.location.reload();
-            return response.data;
-          })
-          .catch((err) => {
-            console.log(err.response.data.errors[0].msg);
-            this.message = "incorrect credentiels";
-          });
+      // let token = "";
+      // if (this.user.email == "" || this.user.password == "") {
+      //   this.message = "Please enter username and password";
+      // } else {
+      //   axios
+      //     .post("http://localhost:5000/api/auth/login", {
+      //       email: this.user.email,
+      //       password: this.user.password,
+      //     })
+      //     .then((response) => {
+      //       if (response.data.token) {
+      //         console.log("login data", response.data);
+      //         localStorage.setItem("user", JSON.stringify(response.data));
+      //       }
+      //       this.$router.push("/home");
+      //       window.location.reload();
+      //       return response.data;
+      //     })
+      //     .catch((err) => {
+      //       this.message = err.response.data.errors[0].msg;
+      //     });
+      // }
+    },
+    handleSubmit(e) {
+      this.submitted = true;
+
+      // stop here if form is invalid
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
       }
+      axios
+        .post("http://localhost:5000/api/auth/login", {
+          email: this.user.email,
+          password: this.user.password,
+        })
+        .then((response) => {
+          if (response.data.token) {
+            localStorage.setItem("user", JSON.stringify(response.data));
+          }
+          this.$router.push("/home");
+          window.location.reload();
+          return response.data;
+        })
+        .catch((err) => {
+          this.message = err.response.data.errors[0].msg;
+        });
     },
   },
 };

@@ -6,23 +6,69 @@
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
       />
-      <form name="form" @submit.prevent="signup">
-        <div>
-          <div class="form-group">
-            <label for="name">name</label>
-            <input v-model="user.name" type="text" class="form-control" name="name" />
+      <form @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <label for="firstName">userName</label>
+          <input
+            type="text"
+            v-model="user.name"
+            id="firstName"
+            name="firstName"
+            class="form-control"
+            :class="{ 'is-invalid': submitted && $v.user.name.$error }"
+          />
+          <div v-if="submitted && $v.user.name.$error" class="invalid-feedback">
+            <span v-if="!$v.user.name.required">Username is required</span>
+            <span v-if="!$v.user.name.minLength">Password must be at least 5 characters</span>
           </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input v-model="user.email" type="email" class="form-control" name="email" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            v-model="user.email"
+            id="email"
+            name="email"
+            class="form-control"
+            :class="{ 'is-invalid': submitted && $v.user.email.$error }"
+          />
+          <div v-if="submitted && $v.user.email.$error" class="invalid-feedback">
+            <span v-if="!$v.user.email.required">Email is required</span>
+            <span v-if="!$v.user.email.email">Email is invalid</span>
           </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input v-model="user.password" type="password" class="form-control" name="password" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            v-model="user.password"
+            id="password"
+            name="password"
+            class="form-control"
+            :class="{ 'is-invalid': submitted && $v.user.password.$error }"
+          />
+          <div v-if="submitted && $v.user.password.$error" class="invalid-feedback">
+            <span v-if="!$v.user.password.required">Password is required</span>
+            <span v-if="!$v.user.password.minLength">Password must be at least 6 characters</span>
           </div>
-          <div class="form-group">
-            <button class="btn btn-primary btn-block">Sign Up</button>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            v-model="user.confirmPassword"
+            id="confirmPassword"
+            name="confirmPassword"
+            class="form-control"
+            :class="{ 'is-invalid': submitted && $v.user.confirmPassword.$error }"
+          />
+          <div v-if="submitted && $v.user.confirmPassword.$error" class="invalid-feedback">
+            <span v-if="!$v.user.confirmPassword.required">Confirm Password is required</span>
+            <span v-else-if="!$v.user.confirmPassword.sameAsPassword">Passwords must match</span>
           </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary">Register</button>
         </div>
       </form>
       <p>Already a user ?</p>
@@ -38,6 +84,7 @@
 </template>
 <script>
 import axios from "axios";
+import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 export default {
   name: "Signup",
   data() {
@@ -48,40 +95,79 @@ export default {
         password: "",
       },
       message: "",
+      submitted: false,
     };
   },
+  validations: {
+    user: {
+      name: { required, minLength: minLength(6) },
+      email: { required, email },
+      password: { required, minLength: minLength(6) },
+      confirmPassword: { required, sameAsPassword: sameAs("password") },
+    },
+  },
   methods: {
-    signup() {
-      let token = "";
-      if (
-        this.user.email == "" ||
-        this.user.name == "" ||
-        this.user.password == ""
-      ) {
-        this.message = "All fields are required";
-      } else {
-        axios
-          .post("http://localhost:5000/api/auth/signup", {
-            name: this.user.name,
-            email: this.user.email,
-            password: this.user.password,
-          })
-          .then((response) => {
-            if (response.data.token) {
-              localStorage.setItem("user", JSON.stringify(response.data));
-            }
-            console.log("sign up response", response.data);
-            this.$router.push("/profile");
-            window.location.reload();
-            return response.data;
-          })
-          .catch((err) => console.log(err));
+    // signup() {
+    //   let token = "";
+    //   if (
+    //     this.user.email == "" ||
+    //     this.user.name == "" ||
+    //     this.user.password == ""
+    //   ) {
+    //     this.message = "All fields are required";
+    //   } else {
+    //     axios
+    //       .post("http://localhost:5000/api/auth/signup", {
+    //         name: this.user.name,
+    //         email: this.user.email,
+    //         password: this.user.password,
+    //       })
+    //       .then((response) => {
+    //         if (response.data.token) {
+    //           localStorage.setItem("user", JSON.stringify(response.data));
+    //         }
+    //         console.log("sign up response", response.data);
+    //         this.$router.push("/profile");
+    //         window.location.reload();
+    //         return response.data;
+    //       })
+    //       .catch((err) => {
+    //         this.message = err.response.data.errors[0].msg;
+    //       });
+    //   }
+    // },
+    handleSubmit(e) {
+      this.submitted = true;
+
+      // stop here if form is invalid
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
       }
+      axios
+        .post("http://localhost:5000/api/auth/signup", {
+          name: this.user.name,
+          email: this.user.email,
+          password: this.user.password,
+        })
+        .then((response) => {
+          if (response.data.token) {
+            localStorage.setItem("user", JSON.stringify(response.data));
+          }
+          this.$router.push("/profile");
+          window.location.reload();
+          return response.data;
+        })
+        .catch((err) => {
+          this.message = err.response.data.errors[0].msg;
+        });
     },
   },
 };
 </script>
 <style scoped>
+/* tooltip */
+
 label {
   display: block;
   margin-top: 10px;
