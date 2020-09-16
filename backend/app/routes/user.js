@@ -28,14 +28,14 @@ module.exports = (app) => {
     userCtrl.login
   );
   //get all users for admin
-  router.get("/users", userCtrl.getAllUsers)
+  router.get("/users", auth, userCtrl.getAllUsers)
 
   //Delete one user for admin
-  router.delete("/users/:id", userCtrl.deleteUser);
+  router.delete("/users/:id", auth, userCtrl.deleteUser);
 
   // // Update a post with id
   router.put("/users/:id",
-    // auth, 
+    auth,
     userCtrl.update);
 
   app.use("/api/auth", router);

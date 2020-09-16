@@ -55,14 +55,12 @@ export default {
             title: this.editedPost.title,
             text: this.editedPost.text,
             UserId: this.currentUserId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
           }
-          // ,
-          // {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
         )
         .then((data) => {
           console.log("apdate post", data);

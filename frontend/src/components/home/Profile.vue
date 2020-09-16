@@ -75,14 +75,13 @@ export default {
           {
             username: this.editedUser.username,
             email: this.editedUser.email,
+          },
+          {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
-          // ,
-          // {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
         )
         .then((data) => {
           console.log("apdate user", data);
@@ -97,15 +96,11 @@ export default {
     },
     deleteUser() {
       axios
-        .delete(
-          `http://localhost:5000/api/auth/users/${this.user.id}`
-          // , {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
-        )
+        .delete(`http://localhost:5000/api/auth/users/${this.user.id}`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        })
         .then(() => {
           console.log("user deleted");
         })

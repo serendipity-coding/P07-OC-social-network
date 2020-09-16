@@ -54,14 +54,12 @@ export default {
             title: this.newPost.title,
             text: this.newPost.text,
             UserId: this.currentUserId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
           }
-          // ,
-          // {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
         )
         .then((data) => {
           console.log("creat message", data);

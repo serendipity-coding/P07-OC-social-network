@@ -80,15 +80,11 @@ export default {
   methods: {
     deleteUser(userId) {
       axios
-        .delete(
-          `http://localhost:5000/api/auth/users/${userId}`
-          // , {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
-        )
+        .delete(`http://localhost:5000/api/auth/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        })
         .then(() => {
           console.log("user deleted");
         })
@@ -99,15 +95,11 @@ export default {
     },
     deletePost(postId) {
       axios
-        .delete(
-          `http://localhost:5000/api/posts/${postId}`
-          // , {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
-        )
+        .delete(`http://localhost:5000/api/posts/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        })
         .then(() => {
           console.log("Post deleted");
         })
@@ -120,14 +112,11 @@ export default {
   beforeCreate() {
     //get all users
     axios
-      .get(
-        "http://localhost:5000/api/auth/users"
-        // , {
-        //   headers: {
-        //     Authorization: `Bearer${user.token}`
-        //   }
-        // }
-      )
+      .get("http://localhost:5000/api/auth/users", {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
         return (this.users = response.data);
       })
@@ -135,29 +124,22 @@ export default {
 
     //get all posts
     axios
-      .get(
-        "http://localhost:5000/api/posts/"
-        // , {
-        //   headers: {
-        //     Authorization: `Bearer${user.token}`
-        //   }
-        // }
-      )
+      .get("http://localhost:5000/api/posts/", {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
         return (this.posts = response.data);
       })
       .catch((err) => console.log(err));
     //get all comment
     axios
-      .get(
-        `http://localhost:5000/api/comments/`
-        //   ,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer${userData.token}`
-        //     }
-        //   }
-      )
+      .get(`http://localhost:5000/api/comments/`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
         return (this.comments = response.data);
       })

@@ -108,8 +108,7 @@ export default {
       axios
         .delete(`http://localhost:5000/api/posts/${postId}`, {
           headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${userData.token}`,
           },
         })
         .then(() => {
@@ -131,13 +130,12 @@ export default {
           {
             content: this.commentContent,
             UserId: this.currentUserId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
           }
-          // ,
-          // {
-          //   headers: {
-          //     Authorization: `Bearer${token}`,
-          //   },
-          // }
         )
         .then((response) => {
           console.log("add comment", response.data);
@@ -154,15 +152,11 @@ export default {
     },
     getLastComment(postId) {
       axios
-        .get(
-          `http://localhost:5000/api/comments/${postId}`
-          //   ,
-          //   {
-          //     headers: {
-          //       Authorization: `Bearer${userData.token}`
-          //     }
-          //   }
-        )
+        .get(`http://localhost:5000/api/comments/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        })
         .then((response) => {
           // console.log("last comment", response.data[0].content);
           this.lastComment = response.data[0].content;
@@ -189,31 +183,23 @@ export default {
     let user = userData.data;
 
     axios
-      .get(
-        "http://localhost:5000/api/posts/"
-        // , {
-        //   headers: {
-        //     Authorization: `Bearer${user.token}`
-        //   }
-        // }
-      )
+      .get("http://localhost:5000/api/posts/", {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
         return (this.posts = response.data);
       })
       .catch((err) => console.log(err));
     //get all comment
     axios
-      .get(
-        `http://localhost:5000/api/comments/`
-        //   ,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer${userData.token}`
-        //     }
-        //   }
-      )
+      .get(`http://localhost:5000/api/comments/`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
-        console.log(response.data);
         return (this.comments = response.data);
       })
       .catch((err) => {

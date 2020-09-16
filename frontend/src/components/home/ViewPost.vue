@@ -108,13 +108,12 @@ export default {
           {
             content: this.commentContent,
             UserId: this.currentUserId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
           }
-          // ,
-          // {
-          //   headers: {
-          //     Authorization: `Bearer${token}`,
-          //   },
-          // }
         )
         .then((response) => {
           console.log("add comment", response.data);
@@ -131,15 +130,11 @@ export default {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
       axios
-        .delete(
-          `http://localhost:5000/api/comments/${commentId}`
-          // , {
-          //   headers: {
-          //     "Content-type": "application/json",
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
-        )
+        .delete(`http://localhost:5000/api/comments/${commentId}`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        })
         .then(() => {
           console.log("message supprimé");
         })
@@ -156,15 +151,11 @@ export default {
     let user = userData.data;
     // console.log("userdata", userData);
     axios
-      .get(
-        `http://localhost:5000/api/posts/${this.$route.params.post_id}`
-        //   ,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer${userData.token}`
-        //     }
-        //   }
-      )
+      .get(`http://localhost:5000/api/posts/${this.$route.params.post_id}`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
         console.log("post by id", response.data);
         return (this.post = response.data);
@@ -176,15 +167,11 @@ export default {
 
     //get all comments
     axios
-      .get(
-        `http://localhost:5000/api/comments/`
-        //   ,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer${userData.token}`
-        //     }
-        //   }
-      )
+      .get(`http://localhost:5000/api/comments/`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
       .then((response) => {
         console.log("all comment", response.data);
         return (this.comments = response.data);

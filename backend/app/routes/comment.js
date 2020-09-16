@@ -7,33 +7,25 @@ module.exports = (app) => {
 
   // Create a new comment
   router.post(
-    "/:id/new",
-    // auth,
-    [check("content", "content is required").not().isEmpty()],
+    "/:id/new", auth, [check("content", "content is required").not().isEmpty()],
     commentCtrl.createComment
   );
 
   // // Retrieve all comments
   router.get(
-    "/",
-    // auth,
-    commentCtrl.findAllComments
+    "/", auth, commentCtrl.findAllComments
   );
 
   // // Retrieve last comment
   router.get(
-    "/:post_id",
-    // auth,
-    commentCtrl.findLastComment
+    "/:post_id", auth, commentCtrl.findLastComment
   );
 
   // // Update a comment with id
   router.put("/:id", auth, commentCtrl.updateComment);
 
   // // Delete a post with id
-  router.delete("/:id",
-    // auth, 
-    commentCtrl.deleteComment);
+  router.delete("/:id", auth, commentCtrl.deleteComment);
 
   app.use("/api/comments", router);
 };
