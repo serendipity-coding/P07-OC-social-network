@@ -19,7 +19,7 @@
           />
           <div v-if="submitted && $v.user.name.$error" class="invalid-feedback">
             <span v-if="!$v.user.name.required">Username is required</span>
-            <span v-if="!$v.user.name.minLength">Password must be at least 5 characters</span>
+            <span v-if="!$v.user.name.minLength">Username must be at least 5 characters</span>
           </div>
         </div>
         <div class="form-group">

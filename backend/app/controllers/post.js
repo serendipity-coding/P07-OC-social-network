@@ -3,6 +3,7 @@ const Post = db.posts;
 const User = require("../models/User");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 
 // @route  POST api/posts/new
 // @desc   Creat post
@@ -15,10 +16,6 @@ exports.createPost = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    // const token = req.headers.authorization.split(" ")[1];
-    // const decodedToken = jwt.verify(token, "secrettoken");
-    // const userId = decodedToken.userId;
-    // console.log("decodedToken", decodedToken);
 
     // Create  and save a post
     Post.create({

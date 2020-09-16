@@ -39,7 +39,6 @@ export default {
       isAdmin: JSON.parse(localStorage.getItem("user")).data.isAdmin,
     };
   },
-
   methods: {
     logout() {
       localStorage.removeItem("user");

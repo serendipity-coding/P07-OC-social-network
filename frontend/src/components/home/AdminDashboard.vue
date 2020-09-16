@@ -198,7 +198,7 @@ export default {
 }
 .table-body {
   height: 300px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 .admin {
   max-width: 800px;

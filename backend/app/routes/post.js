@@ -1,5 +1,6 @@
 const { check, validationResult } = require("express-validator");
 const auth = require("../middleware/auth");
+const multer = require('../middleware/multer-config');
 module.exports = (app) => {
   const postCtrl = require("../controllers/post.js");
 
@@ -9,6 +10,7 @@ module.exports = (app) => {
   router.post(
     "/new",
     // auth,
+    multer,
     [check("text", "Text is required").not().isEmpty()],
     postCtrl.createPost
   );
@@ -30,6 +32,7 @@ module.exports = (app) => {
   // // Update a post with id
   router.put("/:id",
     // auth, 
+    multer,
     postCtrl.update);
 
   // // Delete a post with id

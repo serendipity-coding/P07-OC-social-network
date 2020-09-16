@@ -1,64 +1,32 @@
 <template>
   <div class="blogs container">
-    <div class="heading">
-      <h2>Latest posts</h2>
-      <!--add new post-->
-      <div class="new-post">
-        <router-link to="/newpost">
-          <img src="../notepad.png" class="add-post-logo" alt />
-          <p>Add post</p>
-        </router-link>
+    <div class="wall">
+      <div class="heading">
+        <h2>Latest posts</h2>
+        <!--add new post-->
+        <div class="new-post">
+          <router-link to="/newpost">
+            <img src="../notepad.png" class="add-post-logo" alt />
+            <p>Add post</p>
+          </router-link>
+        </div>
       </div>
-    </div>
-    <!--search in posts-->
-    <input type="text" v-model="searchTerm" placeholder="Search Posts" class="search-input" />
+      <!--search in posts-->
+      <input type="text" v-model="searchTerm" placeholder="Search Posts" class="search-input" />
 
-    <!--all posts-->
-    <div v-for="post in filteredPosts" :key="post.id">
-      <div class="card">
-        <h5 class="card-header">
-          <div class="card-header-title">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <p class="date">{{ moment(post.createdAt).fromNow() }}</p>
-          </div>
-          <div class="card-header-user">
-            {{ post.users.name }}
-            <img class="avatar" v-bind:src="post.users.avatar" />
-          </div>
-        </h5>
-
-        <div class="card-body">
-          <p class="card-text">{{ post.text }}</p>
-          <div v-if=" commentCount(post.id).length > 0">
-            <p>{{ getLastComment(post.id) }}</p>
-          </div>
-          <div class="post-react">
-            <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }">
-              <span class="comment-nbr">
-                {{ commentCount(post.id).length }}
-                <i class="fas fa-comment fa-lg"></i>
-              </span>
-            </router-link>
-          </div>
-          <div class="comment">
-            <div class="input-group mb-3">
-              <input
-                type="text"
-                class="form-control"
-                v-model="commentContent"
-                placeholder="Add a comment ..."
-                aria-describedby="button-addon2"
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  id="button-addon2"
-                  @click="addComment(post.id)"
-                >Comment</button>
-              </div>
+      <!--all posts-->
+      <div v-for="post in filteredPosts" :key="post.id">
+        <div class="card">
+          <h5 class="card-header">
+            <div class="card-header-title">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="date">{{ moment(post.createdAt).fromNow() }}</p>
             </div>
-          </div>
+            <div class="card-header-user">
+              {{ post.users.name }}
+              <img class="avatar" v-bind:src="post.users.avatar" />
+            </div>
+          </h5>
           <div class="postCtrl">
             <a
               class="nav-link trash"
@@ -66,11 +34,41 @@
               href
               @click.prevent="deletePost(post.id)"
             >
-              <i class="fas fa-trash-alt fa-2x"></i>
+              <i class="fas fa-trash-alt fa-lg"></i>
             </a>
             <router-link :to="{ name: 'UpdatePost', params: { post_id: post.id } }">
-              <i class="far fa-edit fa-2x" v-if="currentUserId == post.UserId"></i>
+              <i class="far fa-edit fa-lg" v-if="currentUserId == post.UserId"></i>
             </router-link>
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ post.text }}</p>
+            <div class="commentCtrl">
+              <a
+                @click="displayComment"
+                class="comment-nbr"
+              >{{ commentCount(post.id).length }} comments</a>
+              <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }">
+                <i class="fas fa-comment fa-2x"></i>
+              </router-link>
+            </div>
+            <div v-if="commentIsDisplayed && commentCount(post.id).length > 0">
+              <div v-for="comment in comments" :key="comment.id">
+                <div class="comment-content" v-if="comment.PostId == post.id ">
+                  <div class="comment-content__avatar">
+                    <img class="avatar" v-bind:src="comment.users.avatar" />
+                  </div>
+                  <div class="comment-content__text">
+                    <strong>{{comment.users.name}}</strong>
+                    <p>{{comment.content}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="post-react">
+              <!-- <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }"> -->
+
+              <!-- </router-link> -->
+            </div>
           </div>
         </div>
       </div>
@@ -90,16 +88,20 @@ export default {
     return {
       moment: moment,
       user: JSON.parse(localStorage.getItem("user")).data,
-      userToken: JSON.parse(localStorage.getItem("user")),
       currentUserId: JSON.parse(localStorage.getItem("user")).data.id,
       message: "",
       commentContent: "",
       posts: [],
       comments: [],
       searchTerm: "",
+      commentIsDisplayed: false,
     };
   },
   methods: {
+    displayComment() {
+      console.log(!this.commentIsDisplayed);
+      return (this.commentIsDisplayed = !this.commentIsDisplayed);
+    },
     deletePost(postId) {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
@@ -162,10 +164,10 @@ export default {
           //   }
         )
         .then((response) => {
-          let lastComment = "";
-          console.log("last comment", response.data[0].content);
-          lastComment = response.data[0].content;
-          return lastComment;
+          // console.log("last comment", response.data[0].content);
+          this.lastComment = response.data[0].content;
+          document.querySelector(".lastComment-text").innerHTML =
+            response.data[0].content;
         })
         .catch((err) => {
           console.log(err.response.data.errors[0].msg);
@@ -222,6 +224,32 @@ export default {
 </script>
 
 <style>
+.commentCtrl {
+  display: flex;
+  justify-content: space-between;
+}
+.comment-content {
+  margin: 10px auto;
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+}
+.comment-content__avatar img {
+  width: 35px;
+  height: 35px;
+  border: #0084ff 2px solid;
+}
+.comment-content__text {
+  color: white;
+  width: 650px;
+  background-color: #0084ff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+.comment-content p {
+  padding-left: 10px;
+}
 .search-input {
   display: block;
   width: 80%;
@@ -269,9 +297,10 @@ export default {
   width: 50px;
   border-radius: 50%;
 }
-.blogs {
+.wall {
   max-width: 600px;
   margin: 20px auto;
+  padding-bottom: 50px;
 }
 #button-addon2 {
   font-weight: 600;
@@ -289,10 +318,16 @@ export default {
   background-color: #eeeeee;
   border-radius: 30px;
 }
+a {
+  cursor: pointer;
+}
 
 .postCtrl {
   display: flex;
-  justify-content: space-between;
+  margin-left: 85%;
+}
+.fa-edit {
+  padding-top: 11px;
 }
 .trash {
   color: rgb(212, 9, 9);

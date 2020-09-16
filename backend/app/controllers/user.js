@@ -5,6 +5,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
+const config = require('../config/jwt.secret') // On récupère la clé pour le TOKEN
 
 // @route  POST api/users
 // @desc   register user
@@ -51,7 +52,7 @@ exports.signup = async (req, res) => {
         // res.send(data);
         res.status(201).json({
           data,
-          token: jwt.sign({ userId: data.id }, "secrettoken", {
+          token: jwt.sign({ userId: data.id }, config.secret, {
             expiresIn: "24h",
           }),
         });
@@ -92,15 +93,9 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
-
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
     let data = user;
 
-    jwt.sign(payload, "secrettoken", { expiresIn: "24h" }, (err, token) => {
+    jwt.sign({ userId: user.id }, config.secret, { expiresIn: "24h" }, (err, token) => {
       if (err) throw err;
       res.json({ data, token });
     });
@@ -150,6 +145,34 @@ exports.deleteUser = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Could not delete User with id=" + id,
+      });
+    });
+};
+
+// @route    PUT api/auth/users/:user_id
+// @desc    Update user
+// @access   Private
+exports.update = (req, res) => {
+  const id = req.params.id;
+
+  User.update(req.body, {
+    where: { id: id },
+
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          message: "User was updated successfully.",
+        });
+      } else {
+        res.send({
+          message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error updating user with id=" + id,
       });
     });
 };

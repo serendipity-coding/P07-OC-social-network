@@ -3,6 +3,7 @@ const { check, validationResult } = require("express-validator");
 module.exports = (app) => {
   const userCtrl = require("../controllers/user.js");
   var router = require("express").Router();
+  const auth = require('../middleware/auth')
 
   // Regsiter as new user
   router.post(
@@ -31,6 +32,11 @@ module.exports = (app) => {
 
   //Delete one user for admin
   router.delete("/users/:id", userCtrl.deleteUser);
+
+  // // Update a post with id
+  router.put("/users/:id",
+    // auth, 
+    userCtrl.update);
 
   app.use("/api/auth", router);
 };

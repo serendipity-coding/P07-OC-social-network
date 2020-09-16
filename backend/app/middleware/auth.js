@@ -1,19 +1,19 @@
 const jwt = require("jsonwebtoken");
-
+const config = require('../config/jwt.secret') // On récupère la clé pour le TOKEN
 module.exports = (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    // const token = req.header("x-auth-token");
-    const decodedToken = jwt.verify(token, "secrettoken");
-    const userId = decodedToken.userId;
-    if (req.body.userId && req.body.userId !== userId) {
-      throw "Id utilisateur invalide";
+    const token = req.headers.authorization.split(' ')[1] // Récupération du token dans l'entête
+    const decodedToken = jwt.verify(token, config.secret) // On vérifie le token avec la clé pour lire ce TOKEN
+    const userId = decodedToken.userId // Le token devient un objet JS classique qu'on place dans une constante, et on y récupère l'user ID pour comparaison le cas échéant
+    if (req.body.idUSERS && req.body.idUSERS !== userId) {
+      const e = new Error('User ID non valable !')
+      throw e
     } else {
-      next();
+      next()
     }
-  } catch {
-    res.status(401).json({
-      error: "erreur d'authentification",
-    });
+  } catch (error) {
+    console.log(error.message)
+    res.status(401).json({ error: error | 'Requête non authentifiée !' })
   }
-};
+}
+

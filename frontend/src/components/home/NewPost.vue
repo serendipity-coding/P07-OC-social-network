@@ -15,8 +15,7 @@
         cols="30"
         placeholder="Add a title..."
       />
-      <textarea class="form-control" v-model="newPost.text" placeholder="add content" rows="3"></textarea>
-      <i class="fas fa-image fa-lg"></i>
+      <textarea class="form-control" v-model="newPost.text" placeholder="Add content" rows="3"></textarea>
       <div v-if="message" class="alert alert-danger">{{ message }}</div>
     </div>
     <button type="button" class="btn btn-info post-btn" @click="creatPost">Post</button>

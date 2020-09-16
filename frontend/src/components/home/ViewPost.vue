@@ -6,10 +6,10 @@
           <h5 class="card-title">{{ post.title }}</h5>
           <p class="date">{{ moment(post.createdAt).fromNow() }}</p>
         </div>
-        <div class="card-header-user">
+        <!-- <div class="card-header-user">
           {{ post.users.name }}
           <img class="avatar" v-bind:src="post.users.avatar" />
-        </div>
+        </div>-->
       </h5>
 
       <div class="card-body">
