@@ -12,28 +12,38 @@
         <a class="btn btn-primary" @click="showUpdateInput">Modify profile</a>
       </div>
     </div>
-    <div v-if="updateBtn" class="card-body user-input">
+    <!-- <div v-if="updateBtn" class="card-body userUpdate-input">
+      <label for="firstName">userName</label>
       <input
-        type="textarea"
+        type="text"
         class="text"
+        name="firstName"
         v-model="editedUser.username"
-        id="input-title"
-        rows="10"
-        cols="30"
         placeholder="username"
       />
-      <input
-        type="textarea"
-        class="text"
-        v-model="editedUser.email"
-        id="input-title"
-        rows="10"
-        cols="30"
-        placeholder="email"
-      />
+      <label for="email">Email</label>
+      <input type="text" class="text" name="email" v-model="editedUser.email" placeholder="email" />
       <div v-if="message" class="alert alert-danger">{{ message }}</div>
       <button type="button" class="btn btn-info post-btn" @click="editUser">Confirm</button>
       <button type="button" class="btn btn-info post-btn" @click="hideUpdateInput">Cancel</button>
+    </div>-->
+    <div class="container userUpdate-input">
+      <form v-if="updateBtn">
+        <div class="form-group">
+          <label for="username">username</label>
+          <input type="text" class="form-control" id="username" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" class="form-control" id="email" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" />
+        </div>
+        <button type="submit" class="btn btn-primary" @click="editUser">Submit</button>
+        <button type="submit" class="btn btn-secondary" @click="hideUpdateInput">Cancel</button>
+      </form>
     </div>
   </div>
 </template>
@@ -137,5 +147,10 @@ img {
   width: 17px;
   margin-left: 93%;
   margin-top: 10px;
+}
+.userUpdate-input {
+  max-width: 500px;
+  justify-content: center;
+  margin-bottom: 150px;
 }
 </style>

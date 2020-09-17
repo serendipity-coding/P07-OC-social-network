@@ -35,7 +35,7 @@ module.exports = (app) => {
 
   // // Update a post with id
   router.put("/users/:id",
-    auth,
+    // auth,
     userCtrl.update);
 
   app.use("/api/auth", router);

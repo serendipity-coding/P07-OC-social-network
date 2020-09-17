@@ -79,6 +79,8 @@ export default {
   },
   methods: {
     deleteUser(userId) {
+      let userData = JSON.parse(localStorage.getItem("user"));
+      let token = userData.token;
       axios
         .delete(`http://localhost:5000/api/auth/users/${userId}`, {
           headers: {
@@ -110,6 +112,8 @@ export default {
     },
   },
   beforeCreate() {
+    let userData = JSON.parse(localStorage.getItem("user"));
+    let token = userData.token;
     //get all users
     axios
       .get("http://localhost:5000/api/auth/users", {

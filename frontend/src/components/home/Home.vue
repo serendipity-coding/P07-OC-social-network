@@ -42,28 +42,30 @@
           </div>
           <div class="card-body">
             <p class="card-text">{{ post.text }}</p>
+            <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }">
+              <i class="fas fa-comment fa-2x"></i>
+            </router-link>
             <div class="commentCtrl">
               <a
                 @click="displayComment"
                 class="comment-nbr"
               >{{ commentCount(post.id).length }} comments</a>
-              <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }">
-                <i class="fas fa-comment fa-2x"></i>
-              </router-link>
-            </div>
-            <div v-if="commentIsDisplayed && commentCount(post.id).length > 0">
-              <div v-for="comment in comments" :key="comment.id">
-                <div class="comment-content" v-if="comment.PostId == post.id ">
-                  <div class="comment-content__avatar">
-                    <img class="avatar" v-bind:src="comment.users.avatar" />
-                  </div>
-                  <div class="comment-content__text">
-                    <strong>{{comment.users.name}}</strong>
-                    <p>{{comment.content}}</p>
+              <div class="commentList" v-if="commentCount(post.id).length > 0">
+                <!-- <div v-if="commentIsDisplayed && commentCount(post.id).length > 0"> -->
+                <div v-for="comment in comments" :key="comment.id">
+                  <div class="comment-content" v-if="comment.PostId == post.id ">
+                    <div class="comment-content__avatar">
+                      <img class="avatar" v-bind:src="comment.users.avatar" />
+                    </div>
+                    <div class="comment-content__text">
+                      <strong>{{comment.users.name}}</strong>
+                      <p>{{comment.content}}</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="post-react">
               <!-- <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }"> -->
 
@@ -94,13 +96,18 @@ export default {
       posts: [],
       comments: [],
       searchTerm: "",
-      commentIsDisplayed: false,
+      // commentIsDisplayed: false,
     };
   },
   methods: {
-    displayComment() {
-      console.log(!this.commentIsDisplayed);
-      return (this.commentIsDisplayed = !this.commentIsDisplayed);
+    displayComment(e) {
+      let x = e.target.nextElementSibling;
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+      // return (this.commentIsDisplayed = !this.commentIsDisplayed);
     },
     deletePost(postId) {
       let userData = JSON.parse(localStorage.getItem("user"));
@@ -210,10 +217,20 @@ export default {
 </script>
 
 <style>
+.commentList {
+  display: none;
+}
 .commentCtrl {
   display: flex;
-  justify-content: space-between;
+  position: relative;
+  flex-direction: column;
 }
+.commentCtrl a {
+  margin-left: 80%;
+  padding-top: 0;
+  margin-top: 0;
+}
+
 .comment-content {
   margin: 10px auto;
   display: flex;

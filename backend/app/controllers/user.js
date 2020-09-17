@@ -152,27 +152,44 @@ exports.deleteUser = (req, res) => {
 // @route    PUT api/auth/users/:user_id
 // @desc    Update user
 // @access   Private
-exports.update = (req, res) => {
+// exports.update = (req, res) => {
+//   const id = req.params.id;
+
+//   User.update(req.body, {
+//     where: { id: id },
+//   })
+//     .then((num) => {
+//       if (num == 1) {
+//         res.send({
+//           message: "User was updated successfully.",
+//         });
+//       } else {
+//         res.send({
+//           message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`,
+//         });
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: "Error updating user with id=" + id,
+//       });
+//     });
+// };
+
+
+exports.update = async (req, res) => {
   const id = req.params.id;
-
-  User.update(req.body, {
-    where: { id: id },
-
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`,
-        });
-      }
+  User.update(req.body,
+    {
+      where: { id: id },
+      returning: true,
+      plain: true
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating user with id=" + id,
-      });
+    .then(function (result) {
+      res.send(result);
+
+    })
+    .catch(function (err) {
+      console.log(err)
     });
 };
