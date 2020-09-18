@@ -42,19 +42,17 @@
           >
             <i class="fas fa-trash-alt fa-2x"></i>
           </a>
-          <a class="nav-link" v-if="currentUserId == post.UserId" href @click.prevent="editPost">
-            <i class="far fa-edit fa-2x"></i>
-          </a>
+          <router-link
+            v-if="currentUserId == post.UserId"
+            :to="{ name: 'UpdatePost', params: { post_id: post.id } }"
+          >
+            <i class="far fa-edit fa-lg" v-if="currentUserId == post.UserId"></i>
+          </router-link>
         </div>
       </div>
     </div>
     <!--display all comments-->
     <div class="comments" v-for="comment in comments" :key="comment.id">
-      <!-- <div class="comment" v-for="comment in comments" :key="comment.id">
-        <h3 v-if="$route.params.post_id == comment.PostId">
-          {{ comment.content }}
-        </h3>
-      </div>-->
       <div class="comment" v-if="$route.params.post_id == comment.PostId">
         <div class="comment-header">
           <div class="comment-header_user">

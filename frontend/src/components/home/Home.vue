@@ -60,6 +60,14 @@
                     <div class="comment-content__text">
                       <strong>{{comment.users.name}}</strong>
                       <p>{{comment.content}}</p>
+                      <a
+                        class="nav-link trash"
+                        v-if="currentUserId == comment.UserId || user.isAdmin"
+                        href
+                        @click.prevent="deleteComment(comment.id)"
+                      >
+                        <i class="fas fa-trash-alt fa-lg"></i>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -118,10 +126,26 @@ export default {
           },
         })
         .then(() => {
-          console.log("message supprimé");
+          console.log("post deleted");
         })
         .catch(() => {
-          console.log("le message n'a pas été supprimé !");
+          console.log("couldn't delete post");
+        });
+      window.location.reload();
+    },
+    deleteComment(commentId) {
+      let userData = JSON.parse(localStorage.getItem("user"));
+      axios
+        .delete(`http://localhost:5000/api/comments/${commentId}`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        })
+        .then(() => {
+          console.log("comment deleted");
+        })
+        .catch(() => {
+          console.log("couldn't delete comment");
         });
       window.location.reload();
     },
@@ -188,7 +212,7 @@ export default {
     //get all posts
     let userData = JSON.parse(localStorage.getItem("user"));
     let user = userData.data;
-
+    console.log(JSON.parse(localStorage.getItem("user")).token);
     axios
       .get("http://localhost:5000/api/posts/", {
         headers: {
@@ -196,6 +220,7 @@ export default {
         },
       })
       .then((response) => {
+        console.log("posts", response.data);
         return (this.posts = response.data);
       })
       .catch((err) => console.log(err));
@@ -207,6 +232,7 @@ export default {
         },
       })
       .then((response) => {
+        console.log("comments", response.data);
         return (this.comments = response.data);
       })
       .catch((err) => {
