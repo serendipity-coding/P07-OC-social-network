@@ -1,5 +1,5 @@
 <template>
-  <div class="home row">
+  <div class="home container-fluid">
     <div class="leading">
       <div class="card">
         <img src="../icon-above-font.png" class="card-img-top" alt="..." />
@@ -146,6 +146,11 @@ export default {
 .btn-success {
   margin: 10px auto;
   display: block;
+}
+@media screen and (min-width: 320px) and (max-width: 500px) {
+  .home {
+    display: flex;
+  }
 }
 .home {
   display: grid;

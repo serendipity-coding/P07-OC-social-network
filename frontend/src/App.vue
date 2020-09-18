@@ -20,4 +20,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style >
+#app {
+  padding-bottom: 100px;
+}
+</style>

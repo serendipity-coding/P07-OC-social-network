@@ -40,7 +40,7 @@
             href
             @click.prevent="deletePost(post.id)"
           >
-            <i class="fas fa-trash-alt fa-2x"></i>
+            <i class="fas fa-trash-alt fa-lg"></i>
           </a>
           <router-link
             v-if="currentUserId == post.UserId"
@@ -53,7 +53,7 @@
     </div>
     <!--display all comments-->
     <div class="comments" v-for="comment in comments" :key="comment.id">
-      <div class="comment" v-if="$route.params.post_id == comment.PostId">
+      <div class="comment container-fluid" v-if="$route.params.post_id == comment.PostId">
         <div class="comment-header">
           <div class="comment-header_user">
             <img class="avatar" v-bind:src="comment.users.avatar" />
@@ -73,7 +73,7 @@
             href
             @click.prevent="deleteComment(comment.id)"
           >
-            <i class="fas fa-trash-alt fa-2x"></i>
+            <i class="fas fa-trash-alt fa-lg"></i>
           </a>
         </div>
       </div>
@@ -181,6 +181,15 @@ export default {
 };
 </script>
 <style scoped>
+@media screen and (min-width: 320px) and (max-width: 500px) {
+  .comment {
+    width: 350px !important;
+    margin: 15px;
+  }
+  .view-post {
+    padding: 5px;
+  }
+}
 .commentCtrl {
   display: flex;
   flex-direction: row-reverse;
@@ -268,13 +277,16 @@ export default {
 .card {
   margin: 20px auto;
   background-color: #e0e0e0;
-  border-radius: 30px;
+  border-radius: 10px;
   max-width: 750px;
 }
 
 .postCtrl {
   display: flex;
   justify-content: space-between;
+}
+.postCtrl a {
+  padding-top: 0;
 }
 .trash {
   color: rgb(212, 9, 9);

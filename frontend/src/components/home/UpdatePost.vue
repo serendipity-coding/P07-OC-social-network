@@ -18,7 +18,7 @@
       <textarea class="form-control" v-model="editedPost.text" placeholder="add content" rows="3"></textarea>
       <div v-if="message" class="alert alert-danger">{{ message }}</div>
     </div>
-    <button type="button" class="btn btn-info post-btn" @click="editPost">Edit</button>
+    <button type="button" class="btn btn-info post-btn mx-auto" @click="editPost">Edit</button>
   </div>
 </template>
 <script>
@@ -80,5 +80,17 @@ export default {
 .card {
   max-width: 600px;
   margin: 100px auto;
+}
+.btn {
+  width: 150px;
+  margin-bottom: 20px;
+}
+#input-title {
+  margin: 10px;
+}
+@media screen and (min-width: 320px) and (max-width: 500px) {
+  .card {
+    margin: 10px;
+  }
 }
 </style>

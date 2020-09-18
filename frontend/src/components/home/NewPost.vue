@@ -85,4 +85,10 @@ export default {
   max-width: 600px;
   margin: 100px auto;
 }
+@media screen and (min-width: 320px) and (max-width: 500px) {
+  .card {
+    margin: 100px 10px;
+    border-radius: 10px;
+  }
+}
 </style>

@@ -45,15 +45,15 @@
             <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }">
               <i class="fas fa-comment fa-2x"></i>
             </router-link>
-            <div class="commentCtrl">
+            <div class="commentCtrl d-flex flex-column">
               <a
                 @click="displayComment"
-                class="comment-nbr"
+                class="comment-nbr container-fluid"
               >{{ commentCount(post.id).length }} comments</a>
               <div class="commentList" v-if="commentCount(post.id).length > 0">
                 <!-- <div v-if="commentIsDisplayed && commentCount(post.id).length > 0"> -->
                 <div v-for="comment in comments" :key="comment.id">
-                  <div class="comment-content" v-if="comment.PostId == post.id ">
+                  <div class="comment-content container-fluid" v-if="comment.PostId == post.id ">
                     <div class="comment-content__avatar">
                       <img class="avatar" v-bind:src="comment.users.avatar" />
                     </div>
@@ -242,26 +242,30 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .commentList {
   display: none;
-}
-.commentCtrl {
-  display: flex;
-  position: relative;
-  flex-direction: column;
 }
 .commentCtrl a {
   margin-left: 80%;
   padding-top: 0;
   margin-top: 0;
 }
+@media screen and (min-width: 320px) and (max-width: 500px) {
+  .commentCtrl a {
+    margin-left: 60%;
+  }
+  .postCtrl {
+    display: flex;
+    margin-left: 0 !important;
+  }
+}
 
 .comment-content {
   margin: 10px auto;
   display: flex;
   flex-direction: row;
-  width: 500px;
+  /* width: 500px; */
 }
 .comment-content__avatar img {
   width: 35px;
