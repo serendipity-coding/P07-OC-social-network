@@ -41,10 +41,10 @@ export default {
     creatPost(newPost) {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-      if (newPost.title == null) {
+      if (newPost.title == "") {
         this.message = "Please add a title";
       }
-      if (newPost.text == null) {
+      if (newPost.text == "") {
         this.message = "Please add a text";
       }
       axios

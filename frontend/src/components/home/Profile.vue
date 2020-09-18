@@ -3,7 +3,7 @@
     <h1>User profile</h1>
     <div class="card profile-card">
       <a class="deleteProfile" @click="deleteUser">
-        <i class="fas fa-times fa-sm"></i>
+        <i class="fas fa-trash-alt"></i>
       </a>
       <img v-bind:src="user.avatar" />
       <div class="card-body">
@@ -12,36 +12,49 @@
         <a class="btn btn-primary" @click="showUpdateInput">Modify profile</a>
       </div>
     </div>
-    <!-- <div v-if="updateBtn" class="card-body userUpdate-input">
-      <label for="firstName">userName</label>
-      <input
-        type="text"
-        class="text"
-        name="firstName"
-        v-model="editedUser.username"
-        placeholder="username"
-      />
-      <label for="email">Email</label>
-      <input type="text" class="text" name="email" v-model="editedUser.email" placeholder="email" />
-      <div v-if="message" class="alert alert-danger">{{ message }}</div>
-      <button type="button" class="btn btn-info post-btn" @click="editUser">Confirm</button>
-      <button type="button" class="btn btn-info post-btn" @click="hideUpdateInput">Cancel</button>
-    </div>-->
     <div class="container userUpdate-input">
-      <form v-if="updateBtn">
+      <form v-if="updateBtn" @submit.prevent="handleEdit">
         <div class="form-group">
           <label for="username">username</label>
-          <input type="text" class="form-control" id="username" />
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            v-model="editedUser.username"
+            :class="{ 'is-invalid': submitted && $v.editedUser.username.$error }"
+          />
+          <div v-if="submitted && $v.editedUser.username.$error" class="invalid-feedback">
+            <span v-if="!$v.editedUser.username.minLength">Username must be at least 5 characters</span>
+          </div>
         </div>
         <div class="form-group">
           <label for="email">Email address</label>
-          <input type="email" class="form-control" id="email" />
+          <input
+            type="text"
+            class="form-control"
+            id="email"
+            v-model="editedUser.email"
+            :class="{ 'is-invalid': submitted && $v.editedUser.email.$error }"
+          />
+          <div v-if="submitted && $v.editedUser.email.$error" class="invalid-feedback">
+            <span v-if="!$v.editedUser.email.email">Email is invalid</span>
+          </div>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" />
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            v-model="editedUser.password"
+            :class="{ 'is-invalid': submitted && $v.editedUser.password.$error }"
+          />
+          <div v-if="submitted && $v.editedUser.password.$error" class="invalid-feedback">
+            <span v-if="!$v.editedUser.password.required">Password is required</span>
+            <span v-if="!$v.editedUser.password.minLength">Password must be at least 6 characters</span>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary" @click="editUser">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
         <button type="submit" class="btn btn-secondary" @click="hideUpdateInput">Cancel</button>
       </form>
     </div>
@@ -49,6 +62,7 @@
 </template>
 <script>
 import axios from "axios";
+import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 export default {
   name: "Profile",
   data() {
@@ -58,9 +72,18 @@ export default {
       editedUser: {
         username: "",
         email: "",
+        password: "",
       },
       message: "",
+      submitted: false,
     };
+  },
+  validations: {
+    editedUser: {
+      username: { minLength: minLength(6) },
+      email: { email },
+      password: { required, minLength: minLength(6) },
+    },
   },
   methods: {
     showUpdateInput() {
@@ -70,21 +93,32 @@ export default {
       return (this.updateBtn = false);
     },
 
-    editUser() {
+    handleEdit(e) {
+      this.submitted = true;
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-      if (this.editedUser.username == null) {
-        this.editedUser.username = userData.data.username;
+
+      // stop here if form is invalid
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
       }
-      if (this.editedUser.email == null) {
+      if (this.editedUser.username == "") {
+        this.editedUser.username = userData.data.name;
+      }
+      if (this.editedUser.email == "") {
         this.editedUser.email = userData.data.email;
+      }
+      if (this.editedUser.password == "") {
+        this.editedUser.password = userData.data.password;
       }
       axios
         .put(
           `http://localhost:5000/api/auth/users/${userData.data.id}`,
           {
-            username: this.editedUser.username,
+            name: this.editedUser.username,
             email: this.editedUser.email,
+            password: this.editedUser.password,
           },
           {
             headers: {
@@ -94,21 +128,22 @@ export default {
           }
         )
         .then((data) => {
-          console.log("apdate user", data);
+          localStorage.removeItem("user");
+          localStorage.setItem("user", JSON.stringify(data.data));
+          window.location.reload();
           this.message === "";
-          // this.updateBtn= true,
-          // localStorage.setItem("user", JSON.stringify(data));
-          // this.$router.push("/home");
         })
         .catch(() => {
           console.log("le message n'a pas été envoyé");
         });
     },
     deleteUser() {
+      let userData = JSON.parse(localStorage.getItem("user"));
+      let token = userData.token;
       axios
         .delete(`http://localhost:5000/api/auth/users/${this.user.id}`, {
           headers: {
-            Authorization: `Bearer ${userData.token}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
@@ -152,5 +187,8 @@ img {
   max-width: 500px;
   justify-content: center;
   margin-bottom: 150px;
+}
+a {
+  cursor: pointer;
 }
 </style>

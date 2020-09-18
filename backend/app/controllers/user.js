@@ -178,18 +178,41 @@ exports.deleteUser = (req, res) => {
 
 
 exports.update = async (req, res) => {
-  const id = req.params.id;
-  User.update(req.body,
-    {
-      where: { id: id },
-      returning: true,
-      plain: true
-    })
-    .then(function (result) {
-      res.send(result);
-
-    })
-    .catch(function (err) {
-      console.log(err)
+  const email = req.body.email
+  const name = req.body.name
+  const id = req.params.id
+  let password = req.body.password
+  //hash the new password
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      password = hash;
+      //update the user by id
+      User.update({ email, name, password },
+        {
+          where: { id: id },
+        })
+        .then(function () {
+          //find and retreive the new user
+          User.findByPk(id)
+            .then(function (result) {
+              let data = result;
+              jwt.sign({ userId: data.id }, config.secret, { expiresIn: "24h" }, (err, token) => {
+                if (err) throw err;
+                res.json({ data, token });
+              });
+            })
+            .catch(function (err) {
+              console.log(err)
+            });
+        })
     });
+
+
+
+
+
+
+
+
+
 };

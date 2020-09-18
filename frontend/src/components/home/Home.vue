@@ -102,12 +102,11 @@ export default {
   methods: {
     displayComment(e) {
       let x = e.target.nextElementSibling;
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
+      if (x.style.display === "block") {
         x.style.display = "none";
+      } else {
+        x.style.display = "block";
       }
-      // return (this.commentIsDisplayed = !this.commentIsDisplayed);
     },
     deletePost(postId) {
       let userData = JSON.parse(localStorage.getItem("user"));
@@ -124,6 +123,7 @@ export default {
         .catch(() => {
           console.log("le message n'a pas été supprimé !");
         });
+      window.location.reload();
     },
     editPost() {
       console.log("post updated");

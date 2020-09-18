@@ -16,7 +16,6 @@
         placeholder="Add a title..."
       />
       <textarea class="form-control" v-model="editedPost.text" placeholder="add content" rows="3"></textarea>
-      <i class="fas fa-image fa-lg"></i>
       <div v-if="message" class="alert alert-danger">{{ message }}</div>
     </div>
     <button type="button" class="btn btn-info post-btn" @click="editPost">Edit</button>
@@ -39,37 +38,35 @@ export default {
     };
   },
   methods: {
-    editPost(post) {
+    editPost() {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-      if (post.title == null) {
-        this.message = "Please add a title";
-      }
-      if (post.text == null) {
-        this.message = "Please add a text";
-      }
-      axios
-        .put(
-          `http://localhost:5000/api/posts/${this.$route.params.post_id}`,
-          {
-            title: this.editedPost.title,
-            text: this.editedPost.text,
-            UserId: this.currentUserId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}`,
+      if (this.editedPost.title == "" || this.editedPost.text == "") {
+        this.message = "Please add a title and content";
+      } else {
+        axios
+          .put(
+            `http://localhost:5000/api/posts/${this.$route.params.post_id}`,
+            {
+              title: this.editedPost.title,
+              text: this.editedPost.text,
+              UserId: this.currentUserId,
             },
-          }
-        )
-        .then((data) => {
-          console.log("apdate post", data);
-          this.message === "";
-          this.$router.push("/home");
-        })
-        .catch(() => {
-          console.log("le message n'a pas été envoyé");
-        });
+            {
+              headers: {
+                Authorization: `Bearer ${userData.token}`,
+              },
+            }
+          )
+          .then((data) => {
+            console.log("apdate post", data);
+            this.message === "";
+            this.$router.push("/home");
+          })
+          .catch(() => {
+            console.log("le message n'a pas été envoyé");
+          });
+      }
     },
   },
 };
