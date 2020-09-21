@@ -1,15 +1,11 @@
 <template>
-  <div class="home container-fluid">
-    <div class="leading">
-      <div class="card">
-        <img src="../icon-above-font.png" class="card-img-top" alt="..." />
-        <div class="card-body">
-          <h3 class="card-text">Avec Groupomania, partagez et restez en contact avec vos collègues.</h3>
-        </div>
-      </div>
+  <div class="home">
+    <div class="logo">
+      <img src="../icon-above-font.png" alt="logo de groupomania" />
+      <h3>Avec Groupomania, partagez et restez en contact avec vos collègues.</h3>
     </div>
     <!-- form-->
-    <div class="card card-container col-sm-6">
+    <div class="form">
       <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
@@ -147,45 +143,52 @@ export default {
   margin: 10px auto;
   display: block;
 }
+.home {
+  display: flex;
+  margin: 100px;
+  margin-left: 200px;
+}
 @media screen and (min-width: 320px) and (max-width: 500px) {
   .home {
     display: flex;
+    flex-direction: column;
+    margin: auto;
+  }
+  .logo h3 {
+    width: 300px;
+    font-size: 1.1rem;
+    margin: 5px auto;
+  }
+  .logo img {
+    width: 350px !important;
+    margin: 0px;
+  }
+
+  .form {
+    background-color: greenyellow;
+    width: auto !important;
+    margin: 10px;
+    padding: 10px;
   }
 }
-.home {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 30px;
-}
-.leading .card {
-  background-color: white;
-  border: none;
-  box-shadow: none;
-}
+
 h3 {
   text-align: center;
+  width: 500px;
 }
-.logo {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 110%;
+.logo img {
+  width: 500px;
+  margin: 20px auto;
 }
-
 label {
   display: block;
   margin-top: 10px;
 }
-
-.card-container.card {
-  max-width: 350px;
-}
-
-.card {
+.form {
   background-color: #f7f7f7;
+  width: 350px;
   padding: 20px 25px 30px;
   margin: 30px;
-  margin-top: 130px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
