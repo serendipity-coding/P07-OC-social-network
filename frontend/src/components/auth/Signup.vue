@@ -100,7 +100,7 @@ export default {
   },
   validations: {
     user: {
-      name: { required, minLength: minLength(6) },
+      name: { required, minLength: minLength(5) },
       email: { required, email },
       password: { required, minLength: minLength(6) },
       confirmPassword: { required, sameAsPassword: sameAs("password") },

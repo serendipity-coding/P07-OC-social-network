@@ -172,13 +172,12 @@ h1 {
 }
 img {
   margin: 10px auto;
-  border-radius: 4px;
+  border-radius: 2px;
   padding: 5px;
   width: 250px;
 }
 .deleteProfile {
   color: #cd201f;
-
   width: 17px;
   margin-left: 93%;
   margin-top: 10px;
@@ -190,5 +189,13 @@ img {
 }
 a {
   cursor: pointer;
+}
+@media screen and (min-width: 320px) and (max-width: 500px) {
+  .profile-card {
+    max-width: 350px;
+  }
+  .deleteProfile {
+    margin-left: 90%;
+  }
 }
 </style>

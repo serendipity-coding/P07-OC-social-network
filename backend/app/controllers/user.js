@@ -32,7 +32,7 @@ exports.signup = async (req, res) => {
     const avatar = gravatar.url(email, {
       s: "200", //size
       r: "pg",
-      d: "monsterid",
+      d: "robohash",
     });
     //Encrypt password
     const salt = await bcrypt.genSalt(10);

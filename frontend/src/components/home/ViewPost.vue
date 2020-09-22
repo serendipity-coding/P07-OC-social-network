@@ -202,8 +202,9 @@ export default {
   width: 600px;
   margin: 30px auto;
   padding: 5px;
-  background-color: #b3e5fc;
-  border: 2px solid rgba(0, 175, 240, 0.75);
+  color: white;
+  background-color: #0084ff;
+  border: 2px solid #0084ff;
   border-radius: 12px;
 }
 .comment-header {
