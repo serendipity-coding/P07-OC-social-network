@@ -7,15 +7,5 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
   });
-
-  // Post.associate = function (models) {
-  //   models.Post.belongsTo(models.User, {
-  //     foreignKey: {
-  //       name: "UserId",
-  //       allowNull: false,
-  //     },
-  //   });
-  // };
-
   return Post;
 };

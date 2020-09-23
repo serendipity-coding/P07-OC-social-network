@@ -4,12 +4,6 @@ const cors = require("cors");
 
 const app = express();
 
-// var corsOptions = {
-//   origin: "http://localhost:8081",
-// };
-
-// app.use(cors(corsOptions));
-
 //Erreurs de cors
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

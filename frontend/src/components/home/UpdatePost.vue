@@ -59,12 +59,11 @@ export default {
             }
           )
           .then((data) => {
-            console.log("apdate post", data);
             this.message === "";
             this.$router.push("/home");
           })
           .catch(() => {
-            console.log("le message n'a pas été envoyé");
+            console.log("couldn't update post");
           });
       }
     },

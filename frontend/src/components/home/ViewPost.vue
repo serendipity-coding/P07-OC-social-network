@@ -6,12 +6,7 @@
           <h5 class="card-title">{{ post.title }}</h5>
           <p class="date">{{ moment(post.createdAt).fromNow() }}</p>
         </div>
-        <!-- <div class="card-header-user">
-          {{ post.users.name }}
-          <img class="avatar" v-bind:src="post.users.avatar" />
-        </div>-->
       </h5>
-
       <div class="card-body">
         <p class="card-text">{{ post.text }}</p>
         <div class="add-comment">
@@ -114,7 +109,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log("add comment", response.data);
+          // console.log("add comment", response.data);
           // return (this.post = response.data);
         })
         .catch((err) => {
@@ -147,7 +142,6 @@ export default {
     //get all posts
     let userData = JSON.parse(localStorage.getItem("user"));
     let user = userData.data;
-    // console.log("userdata", userData);
     axios
       .get(`http://localhost:5000/api/posts/${this.$route.params.post_id}`, {
         headers: {
@@ -155,7 +149,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log("post by id", response.data);
         return (this.post = response.data);
       })
       .catch((err) => {
@@ -171,7 +164,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log("all comment", response.data);
         return (this.comments = response.data);
       })
       .catch((err) => {

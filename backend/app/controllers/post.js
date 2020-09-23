@@ -10,19 +10,16 @@ const fs = require('fs');
 // @acess  Private
 exports.createPost = (req, res) => {
   const errors = validationResult(req);
-
   // check input
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-
     // Create  and save a post
     Post.create({
       title: req.body.title,
       text: req.body.text,
       UserId: req.body.UserId,
-      // UserId: userId,
     })
       .then((data) => {
         res.send(data);
@@ -61,7 +58,6 @@ exports.findAll = (req, res) => {
 // @access   Private
 exports.findOne = (req, res) => {
   const id = req.params.id;
-
   Post.findByPk(id, { include: ["users"] })
     .then((data) => {
       res.send(data);

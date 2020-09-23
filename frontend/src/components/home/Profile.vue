@@ -97,7 +97,6 @@ export default {
       this.submitted = true;
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-
       // stop here if form is invalid
       this.$v.$touch();
       if (this.$v.$invalid) {

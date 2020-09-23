@@ -85,33 +85,8 @@ export default {
   },
 
   methods: {
-    login() {
-      // let token = "";
-      // if (this.user.email == "" || this.user.password == "") {
-      //   this.message = "Please enter username and password";
-      // } else {
-      //   axios
-      //     .post("http://localhost:5000/api/auth/login", {
-      //       email: this.user.email,
-      //       password: this.user.password,
-      //     })
-      //     .then((response) => {
-      //       if (response.data.token) {
-      //         console.log("login data", response.data);
-      //         localStorage.setItem("user", JSON.stringify(response.data));
-      //       }
-      //       this.$router.push("/home");
-      //       window.location.reload();
-      //       return response.data;
-      //     })
-      //     .catch((err) => {
-      //       this.message = err.response.data.errors[0].msg;
-      //     });
-      // }
-    },
     handleSubmit(e) {
       this.submitted = true;
-
       // stop here if form is invalid
       this.$v.$touch();
       if (this.$v.$invalid) {

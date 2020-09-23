@@ -107,38 +107,8 @@ export default {
     },
   },
   methods: {
-    // signup() {
-    //   let token = "";
-    //   if (
-    //     this.user.email == "" ||
-    //     this.user.name == "" ||
-    //     this.user.password == ""
-    //   ) {
-    //     this.message = "All fields are required";
-    //   } else {
-    //     axios
-    //       .post("http://localhost:5000/api/auth/signup", {
-    //         name: this.user.name,
-    //         email: this.user.email,
-    //         password: this.user.password,
-    //       })
-    //       .then((response) => {
-    //         if (response.data.token) {
-    //           localStorage.setItem("user", JSON.stringify(response.data));
-    //         }
-    //         console.log("sign up response", response.data);
-    //         this.$router.push("/profile");
-    //         window.location.reload();
-    //         return response.data;
-    //       })
-    //       .catch((err) => {
-    //         this.message = err.response.data.errors[0].msg;
-    //       });
-    //   }
-    // },
     handleSubmit(e) {
       this.submitted = true;
-
       // stop here if form is invalid
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -166,13 +136,10 @@ export default {
 };
 </script>
 <style scoped>
-/* tooltip */
-
 label {
   display: block;
   margin-top: 10px;
 }
-
 .card-container.card {
   max-width: 350px !important;
   padding: 40px 40px;

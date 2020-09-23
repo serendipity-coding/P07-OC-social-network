@@ -37,7 +37,6 @@ exports.signup = async (req, res) => {
     //Encrypt password
     const salt = await bcrypt.genSalt(10);
     password = await bcrypt.hash(password, salt);
-
     // Create a new user
     const newUser = {
       name,
@@ -45,11 +44,9 @@ exports.signup = async (req, res) => {
       password,
       avatar,
     };
-
     // Save new user in the database
     User.create(newUser)
       .then((data) => {
-        // res.send(data);
         res.status(201).json({
           data,
           token: jwt.sign({ userId: data.id }, config.secret, {
@@ -152,30 +149,6 @@ exports.deleteUser = (req, res) => {
 // @route    PUT api/auth/users/:user_id
 // @desc    Update user
 // @access   Private
-// exports.update = (req, res) => {
-//   const id = req.params.id;
-
-//   User.update(req.body, {
-//     where: { id: id },
-//   })
-//     .then((num) => {
-//       if (num == 1) {
-//         res.send({
-//           message: "User was updated successfully.",
-//         });
-//       } else {
-//         res.send({
-//           message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`,
-//         });
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).send({
-//         message: "Error updating user with id=" + id,
-//       });
-//     });
-// };
-
 
 exports.update = async (req, res) => {
   const email = req.body.email
@@ -206,13 +179,4 @@ exports.update = async (req, res) => {
             });
         })
     });
-
-
-
-
-
-
-
-
-
 };

@@ -15,17 +15,5 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: false,
     },
   });
-
-  // User.associate = function (models) {
-  //   models.User.hasMany(models.Post, {
-  //     onDelete: "CASCADE",
-  //     hooks: true,
-  //   });
-  //   models.User.hasMany(models.Comment, {
-  //     onDelete: "CASCADE",
-  //     hooks: true,
-  //   });
-  // };
-
   return User;
 };

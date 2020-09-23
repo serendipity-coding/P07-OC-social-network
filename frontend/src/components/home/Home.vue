@@ -13,7 +13,6 @@
       </div>
       <!--search in posts-->
       <input type="text" v-model="searchTerm" placeholder="Search Posts" class="search-input" />
-
       <!--all posts-->
       <div v-for="post in filteredPosts" :key="post.id">
         <div class="card">
@@ -51,7 +50,6 @@
                 class="comment-nbr container-fluid"
               >{{ commentCount(post.id).length }} comments</a>
               <div class="commentList" v-if="commentCount(post.id).length > 0">
-                <!-- <div v-if="commentIsDisplayed && commentCount(post.id).length > 0"> -->
                 <div v-for="comment in comments" :key="comment.id">
                   <div class="comment-content container-fluid" v-if="comment.PostId == post.id ">
                     <div class="comment-content__avatar">
@@ -72,12 +70,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div class="post-react">
-              <!-- <router-link :to="{ name: 'ViewPost', params: { post_id: post.id } }"> -->
-
-              <!-- </router-link> -->
             </div>
           </div>
         </div>
@@ -104,7 +96,6 @@ export default {
       posts: [],
       comments: [],
       searchTerm: "",
-      // commentIsDisplayed: false,
     };
   },
   methods: {
@@ -189,7 +180,6 @@ export default {
           },
         })
         .then((response) => {
-          // console.log("last comment", response.data[0].content);
           this.lastComment = response.data[0].content;
           document.querySelector(".lastComment-text").innerHTML =
             response.data[0].content;
@@ -212,7 +202,6 @@ export default {
     //get all posts
     let userData = JSON.parse(localStorage.getItem("user"));
     let user = userData.data;
-    console.log(JSON.parse(localStorage.getItem("user")).token);
     axios
       .get("http://localhost:5000/api/posts/", {
         headers: {
@@ -220,7 +209,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log("posts", response.data);
         return (this.posts = response.data);
       })
       .catch((err) => console.log(err));
@@ -232,7 +220,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log("comments", response.data);
         return (this.comments = response.data);
       })
       .catch((err) => {

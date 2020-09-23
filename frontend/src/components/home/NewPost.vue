@@ -62,15 +62,12 @@ export default {
           }
         )
         .then((data) => {
-          console.log("creat message", data);
           this.message === "";
           this.$router.push("/home");
         })
         .catch(() => {
-          console.log("le message n'a pas été envoyé");
+          console.log("le post n'a pas été creé");
         });
-
-      console.log("post btn");
     },
   },
 };

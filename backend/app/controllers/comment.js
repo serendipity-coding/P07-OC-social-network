@@ -16,15 +16,9 @@ exports.createComment = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    // const token = req.headers.authorization.split(" ")[1];
-    // const decodedToken = jwt.verify(token, "secrettoken");
-    // const userId = decodedToken.user.id;
-    // console.log("token", userId);
-
     // Create  and save a post
     Comment.create({
       content: req.body.content,
-      // UserId: userId,
       UserId: req.body.UserId,
       PostId: req.params.id,
     })
@@ -67,7 +61,6 @@ exports.findAllComments = (req, res) => {
 // @access   Private
 exports.updateComment = (req, res) => {
   const id = req.params.id;
-
   Comment.update(req.body, {
     where: { id: id },
   })
@@ -78,7 +71,7 @@ exports.updateComment = (req, res) => {
         });
       } else {
         res.send({
-          message: `Cannot update comment with id=${id}. Maybe posts was not found or req.body is empty!`,
+          message: `Cannot update comment with id=${id}. Maybe comment was not found or req.body is empty!`,
         });
       }
     })
@@ -94,7 +87,6 @@ exports.updateComment = (req, res) => {
 // @access   Private
 exports.deleteComment = (req, res) => {
   const id = req.params.id;
-
   Comment.destroy({
     where: { id: id },
   })

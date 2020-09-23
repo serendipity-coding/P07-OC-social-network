@@ -1,11 +1,11 @@
 const { check, validationResult } = require("express-validator");
+const userCtrl = require("../controllers/user.js");
+var router = require("express").Router();
+const auth = require('../middleware/auth')
 
 module.exports = (app) => {
-  const userCtrl = require("../controllers/user.js");
-  var router = require("express").Router();
-  const auth = require('../middleware/auth')
 
-  // Regsiter as new user
+  // // Regsiter as new user
   router.post(
     "/signup",
     [
@@ -18,7 +18,7 @@ module.exports = (app) => {
     ],
     userCtrl.signup
   );
-  // Login user
+  // // Login user
   router.post(
     "/login",
     [
@@ -27,16 +27,14 @@ module.exports = (app) => {
     ],
     userCtrl.login
   );
-  //get all users for admin
+  // // Get all users for admin
   router.get("/users", auth, userCtrl.getAllUsers)
 
-  //Delete one user for admin
+  // // Delete one user for admin
   router.delete("/users/:id", auth, userCtrl.deleteUser);
 
-  // // Update a post with id
-  router.put("/users/:id",
-    // auth,
-    userCtrl.update);
+  // // Update a user with id
+  router.put("/users/:id", auth, userCtrl.update);
 
   app.use("/api/auth", router);
 };
