@@ -67,6 +67,7 @@
 </template>
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 let moment = require("moment");
 
 export default {
@@ -81,34 +82,64 @@ export default {
     deleteUser(userId) {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-      axios
-        .delete(`http://localhost:5000/api/auth/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        })
-        .then(() => {
-          console.log("user deleted");
-        })
-        .catch(() => {
-          console.log("Cannot delete User!");
-        });
-      window.location.reload();
+      Swal.fire({
+        title: "Are you sure you want to delete user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`http://localhost:5000/api/auth/users/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${userData.token}`,
+              },
+            })
+            .then(() => {
+              console.log("user deleted");
+            })
+            .catch(() => {
+              console.log("Cannot delete User!");
+            });
+          window.location.reload();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          console.log("canceled");
+        }
+      });
     },
     deletePost(postId) {
-      axios
-        .delete(`http://localhost:5000/api/posts/${postId}`, {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        })
-        .then(() => {
-          console.log("Post deleted");
-        })
-        .catch(() => {
-          console.log("Cannot delete post !");
-        });
-      window.location.reload();
+      let userData = JSON.parse(localStorage.getItem("user"));
+      let token = userData.token;
+      Swal.fire({
+        title: "Are you sure you want to delete this post?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`http://localhost:5000/api/posts/${postId}`, {
+              headers: {
+                Authorization: `Bearer ${userData.token}`,
+              },
+            })
+            .then(() => {
+              console.log("Post deleted");
+            })
+            .catch(() => {
+              console.log("Cannot delete post !");
+            });
+          window.location.reload();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          console.log("canceled");
+        }
+      });
     },
   },
   beforeCreate() {
