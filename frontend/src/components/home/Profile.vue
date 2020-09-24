@@ -63,6 +63,7 @@
 <script>
 import axios from "axios";
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+import Swal from "sweetalert2";
 export default {
   name: "Profile",
   data() {
@@ -139,22 +140,35 @@ export default {
     deleteUser() {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
-      axios
-        .delete(`http://localhost:5000/api/auth/users/${this.user.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          console.log("user deleted");
-        })
-        .catch(() => {
-          console.log("Cannot delete User!");
-        });
-      localStorage.removeItem("user");
-      this.user = "";
-      this.$router.push("/");
-      window.location.reload();
+      Swal.fire({
+        title: "Are you sure you wanna delete?",
+        text: "Your profile will be permenetly deleted !",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`http://localhost:5000/api/auth/users/${this.user.id}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then(() => {
+              console.log("user deleted");
+            })
+            .catch(() => {
+              console.log("Cannot delete User!");
+            });
+          localStorage.removeItem("user");
+          this.user = "";
+          this.$router.push("/");
+          window.location.reload();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          console.log("canceled");
+        }
+      });
     },
   },
 };
