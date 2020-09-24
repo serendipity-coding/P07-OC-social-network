@@ -21,10 +21,17 @@
             class="form-control"
             id="username"
             v-model="editedUser.username"
-            :class="{ 'is-invalid': submitted && $v.editedUser.username.$error }"
+            :class="{
+              'is-invalid': submitted && $v.editedUser.username.$error,
+            }"
           />
-          <div v-if="submitted && $v.editedUser.username.$error" class="invalid-feedback">
-            <span v-if="!$v.editedUser.username.minLength">Username must be at least 5 characters</span>
+          <div
+            v-if="submitted && $v.editedUser.username.$error"
+            class="invalid-feedback"
+          >
+            <span v-if="!$v.editedUser.username.minLength"
+              >Username must be at least 5 characters</span
+            >
           </div>
         </div>
         <div class="form-group">
@@ -36,7 +43,10 @@
             v-model="editedUser.email"
             :class="{ 'is-invalid': submitted && $v.editedUser.email.$error }"
           />
-          <div v-if="submitted && $v.editedUser.email.$error" class="invalid-feedback">
+          <div
+            v-if="submitted && $v.editedUser.email.$error"
+            class="invalid-feedback"
+          >
             <span v-if="!$v.editedUser.email.email">Email is invalid</span>
           </div>
         </div>
@@ -47,15 +57,30 @@
             class="form-control"
             id="password"
             v-model="editedUser.password"
-            :class="{ 'is-invalid': submitted && $v.editedUser.password.$error }"
+            :class="{
+              'is-invalid': submitted && $v.editedUser.password.$error,
+            }"
           />
-          <div v-if="submitted && $v.editedUser.password.$error" class="invalid-feedback">
-            <span v-if="!$v.editedUser.password.required">Password is required</span>
-            <span v-if="!$v.editedUser.password.minLength">Password must be at least 6 characters</span>
+          <div
+            v-if="submitted && $v.editedUser.password.$error"
+            class="invalid-feedback"
+          >
+            <span v-if="!$v.editedUser.password.required"
+              >Password is required</span
+            >
+            <span v-if="!$v.editedUser.password.minLength"
+              >Password must be at least 6 characters</span
+            >
           </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="submit" class="btn btn-secondary" @click="hideUpdateInput">Cancel</button>
+        <button
+          type="submit"
+          class="btn btn-secondary"
+          @click="hideUpdateInput"
+        >
+          Cancel
+        </button>
       </form>
     </div>
   </div>
@@ -129,6 +154,7 @@ export default {
         )
         .then((data) => {
           localStorage.removeItem("user");
+          console.log(data.data);
           localStorage.setItem("user", JSON.stringify(data.data));
           window.location.reload();
           this.message === "";

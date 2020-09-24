@@ -74,10 +74,16 @@ exports.findOne = (req, res) => {
 // @access   Private
 exports.update = (req, res) => {
   const id = req.params.id;
+  const title = req.body.title
+  const text = req.body.text
+  const postId = req.params.postId
 
-  Post.update(req.body, {
-    where: { id: id },
-  })
+  Post.update({ title, text, postId },
+    // req.body,
+
+    {
+      where: { id: id },
+    })
     .then((num) => {
       if (num == 1) {
         res.send({

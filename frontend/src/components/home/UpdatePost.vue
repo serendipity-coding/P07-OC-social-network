@@ -15,10 +15,21 @@
         cols="30"
         placeholder="Add a title..."
       />
-      <textarea class="form-control" v-model="editedPost.text" placeholder="add content" rows="3"></textarea>
+      <textarea
+        class="form-control"
+        v-model="editedPost.text"
+        placeholder="add content"
+        rows="3"
+      ></textarea>
       <div v-if="message" class="alert alert-danger">{{ message }}</div>
     </div>
-    <button type="button" class="btn btn-info post-btn mx-auto" @click="editPost">Edit</button>
+    <button
+      type="button"
+      class="btn btn-info post-btn mx-auto"
+      @click="editPost"
+    >
+      Edit
+    </button>
   </div>
 </template>
 <script>
@@ -50,6 +61,7 @@ export default {
             {
               title: this.editedPost.title,
               text: this.editedPost.text,
+              postId: this.$route.params.post_id,
               UserId: this.currentUserId,
             },
             {
