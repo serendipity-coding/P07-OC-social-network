@@ -351,7 +351,7 @@ export default {
 .card {
   margin: 20px auto;
   background-color: #eeeeee;
-  border-radius: 30px;
+  border-radius: 20px;
 }
 a {
   cursor: pointer;

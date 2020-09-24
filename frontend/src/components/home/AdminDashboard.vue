@@ -210,8 +210,9 @@ export default {
   width: 70px;
   height: 70px;
 }
-.fas {
+table .fas {
   cursor: pointer;
+  color: #b71c1c;
 }
 .table-body {
   height: 300px;

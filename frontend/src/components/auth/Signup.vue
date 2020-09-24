@@ -19,7 +19,7 @@
           />
           <div v-if="submitted && $v.user.name.$error" class="invalid-feedback">
             <span v-if="!$v.user.name.required">Username is required</span>
-            <span v-if="!$v.user.name.minLength">Username must be at least 5 characters</span>
+            <span v-if="!$v.user.name.minLength">Username must be at least 4 characters</span>
           </div>
         </div>
         <div class="form-group">
@@ -100,7 +100,7 @@ export default {
   },
   validations: {
     user: {
-      name: { required, minLength: minLength(5) },
+      name: { required, minLength: minLength(4) },
       email: { required, email },
       password: { required, minLength: minLength(6) },
       confirmPassword: { required, sameAsPassword: sameAs("password") },
