@@ -56,7 +56,7 @@ export default {
   margin-left: 5px;
   border-radius: 50%;
 }
-nav {
+.nav {
   font-size: 1.1em;
 }
 .nav-link-logout {

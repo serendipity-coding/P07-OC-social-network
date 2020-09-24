@@ -8,7 +8,7 @@
       />
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <label for="firstName">userName</label>
+          <label for="firstName">Username</label>
           <input
             type="text"
             v-model="user.name"
@@ -143,6 +143,9 @@ label {
 .card-container.card {
   max-width: 350px !important;
   padding: 40px 40px;
+}
+form .btn {
+  margin-left: 35%;
 }
 
 .card {

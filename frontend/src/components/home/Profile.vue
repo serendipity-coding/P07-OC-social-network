@@ -81,7 +81,7 @@ export default {
   },
   validations: {
     editedUser: {
-      username: { minLength: minLength(6) },
+      username: { minLength: minLength(4) },
       email: { email },
       password: { required, minLength: minLength(6) },
     },
