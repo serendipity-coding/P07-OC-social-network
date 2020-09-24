@@ -83,7 +83,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 let moment = require("moment");
-moment.locale("fr");
+moment.locale("en");
 
 export default {
   name: "Home",

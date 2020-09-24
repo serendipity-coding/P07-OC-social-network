@@ -2,7 +2,7 @@
   <div class="home">
     <div class="logo">
       <img src="../icon-above-font.png" alt="logo de groupomania" />
-      <h3>Avec Groupomania, partagez et restez en contact avec vos collègues.</h3>
+      <h3>With Groupomania, share and stay in touch with your colleagues.</h3>
     </div>
     <!-- form-->
     <div class="form">
