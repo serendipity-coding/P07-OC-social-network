@@ -141,12 +141,14 @@ export default {
       let userData = JSON.parse(localStorage.getItem("user"));
       let token = userData.token;
       Swal.fire({
-        title: "Are you sure you wanna delete?",
+        title: "Are you sure you want to delete?",
         text: "Your profile will be permenetly deleted !",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
         cancelButtonText: "No, keep it",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
       }).then((result) => {
         if (result.isConfirmed) {
           axios
